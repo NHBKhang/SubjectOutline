@@ -1,0 +1,52 @@
+from core.models import User, Faculty, Major, Course, LearningOutcome, Evaluation
+from django import forms
+from ckeditor_uploader.widgets import CKEditorUploadingWidget
+
+
+class DescriptionBaseForm(forms.ModelForm):
+    description = forms.CharField(widget=CKEditorUploadingWidget)
+
+
+class FacultyForm(DescriptionBaseForm):
+    class Meta:
+        model = Faculty
+        fields = '__all__'
+
+
+class MajorForm(DescriptionBaseForm):
+    class Meta:
+        model = Major
+        fields = '__all__'
+
+
+class CourseForm(forms.ModelForm):
+    class Meta:
+        model = Course
+        fields = '__all__'
+
+
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = '__all__'
+
+
+class LearningOutcomeForm(forms.ModelForm):
+    class Meta:
+        model = LearningOutcome
+        fields = '__all__'
+
+
+class EvaluationForm(forms.ModelForm):
+    class Meta:
+        model = Evaluation
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        try:
+            if self.instance and self.instance.outline:
+                self.fields['learning_outcomes'].queryset = LearningOutcome.objects.filter(objective__outline=self.instance.outline)
+        except Exception:
+            self.fields['learning_outcomes'].queryset = LearningOutcome.objects.none()
+

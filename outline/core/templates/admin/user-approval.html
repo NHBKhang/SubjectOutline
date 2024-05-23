@@ -1,0 +1,229 @@
+{% extends 'admin/base_site.html' %}
+
+{% block content %}
+    <ul class="tabs nav nav-fill nav-tabs">
+        <li class="nav-item">
+            <button class="tablinks nav-link tab1" onclick="openTab(event, 'tab1')">
+                Giảng viên
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="tablinks nav-link tab2" onclick="openTab(event, 'tab2')">
+                Sinh viên
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content pt-5" id="tab-content">
+        <div class="tab-pane tabcontent active" id="tab1">
+            {% if instructor %}
+                {% for i in instructor %}
+                    <div id="i{{ i.id }}" class="row" style="display: flex; align-items: center; width: 100%">
+                        <div class="row inline-flex user-group">
+                            <img class="avatar" src="{{ i.avatar }}" alt="{{ i.username }}">
+                            <div class="inline-flex col" style="margin-left: 5px">
+                                <H2 title="{{ i.username }}" class="inline overflow-hidden"
+                                    style="margin: 0 0 2px">
+                                    Tên tài khoản: {{ i.username }}
+                                </H2>
+                                <p title="{{ i.first_name }} {{ i.last_name }}" style="margin: 2px 0"
+                                   class="overflow-hidden">
+                                    Họ và tên: {{ i.first_name }} {{ i.last_name }}
+                                </p>
+                                <p title="{{ i.email }}" style="margin: 2px 0 0" class="overflow-hidden">
+                                    Email: {{ i.email }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap btn-group" style="justify-content: space-evenly">
+                            <button class="btn btn-success"
+                                    onclick="approveInstructor({{ i.id }})">
+                                <i class="fa-solid fa-check"></i>
+                            </button>
+                            <button class="btn btn-danger" onclick="declineInstructor({{ i.id }})">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-warning">
+                    Không có tài khoản giảng viên nào cần xét duyệt!
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="tab-pane tabcontent" id="tab2">
+            {% if student %}
+                {% for s in student %}
+                    <div id="s{{ s.id }}" class="row" style="display: flex; align-items: center; width: 100%">
+                        <div class="row inline-flex" style="width: 75%">
+                            <div class="inline-flex col" style="margin-left: 5px">
+                                <H2 title="{{ s.username }}" class="inline overflow-hidden"
+                                    style="margin: 0 0 2px">
+                                    Tên tài khoản: {{ s.username }}
+                                </H2>
+                                <p title="{{ s.first_name }} {{ s.last_name }}" style="margin: 2px 0"
+                                   class="overflow-hidden">
+                                    Họ và tên: {{ s.first_name }} {{ s.last_name }}
+                                </p>
+                                <p title="{{ s.email }}" style="margin: 2px 0 0" class="overflow-hidden">
+                                    Email: {{ s.email }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap" style="width: 25%;justify-content: space-evenly">
+                            <button class="btn btn-success"
+                                    onclick="approveStudent({{ s.id }})">
+                                <i class="fa-solid fa-check"></i>
+                            </button>
+                            <button class="btn btn-danger" onclick="declineStudent({{ s.id }})">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-warning">
+                    Không có tài khoản sinh viên nào cần xét duyệt!
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% load static %}
+
+{% block extrahead %}
+    <script src="{% static 'js/approval.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        window.onload = function () {
+            var name = 'tab1';
+            openTab(event, name);
+            document.getElementsByClassName(name)[0].classList.add("active");
+        }
+    </script>
+    <script>
+        var currentHost = `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
+
+        function approveInstructor(userId) {
+            var form = new FormData();
+            form.append('id', userId);
+            form.append('is_active', true);
+
+            axios.patch(`${currentHost}/inactive-users/${userId}/`, form, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).then(res => {
+                if (res.status === 200 || res.status === 204) {
+                    document.getElementById(`i${userId}`).style.display = 'none'
+                    alert("User approved successfully.");
+
+                } else {
+                    alert("Unexpected response from server: " + res.status);
+                }
+            }).catch(error => {
+                alert(error);
+            });
+        }
+
+        function declineInstructor(userId) {
+            axios.delete(`${currentHost}/inactive-users/${userId}/`
+            ).then(res => {
+                if (res.status === 200 || res.status === 204) {
+                    document.getElementById(`i${userId}`).style.display = 'none'
+                    alert("User approved successfully.");
+                } else {
+                    alert("Unexpected response from server: " + res.status);
+                }
+            }).catch(error => {
+                alert("Error:" + error);
+            });
+        }
+
+        function approveStudent(userId) {
+            axios.post(`${currentHost}/temp/user-requests/${userId}/add-user/`
+            ).then(res => {
+                if (res.status === 200 || res.status === 201) {
+                    document.getElementById(`s${userId}`).style.display = 'none'
+                    alert("User approved successfully.");
+
+                    axios.post('/mail/send-email/'
+                    ).then(res => {
+                        alert(res);
+                    }).catch(error => {
+                        alert(error);
+                    });
+                } else {
+                    alert("Unexpected response from server: " + res.status);
+                }
+            }).catch(error => {
+                alert(error);
+            })
+        }
+
+        function declineStudent(userId) {
+            axios.delete(`${currentHost}/temp/user-requests/${userId}/`
+            ).then(res => {
+                if (res.status === 200 || res.status === 204) {
+                    document.getElementById(`s${userId}`).style.display = 'none'
+                    alert("User approved successfully.");
+                } else {
+                    alert("Unexpected response from server: " + res.status);
+                }
+            }).catch(error => {
+                alert(error);
+            });
+        }
+    </script>
+{% endblock %}
+
+{% block extrastyle %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/approval.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .user-group {
+            width: 90%;
+        }
+
+        .btn-group {
+            width: 10%;
+        }
+
+        .btn {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            margin: 2px;
+            color: whitesmoke;
+        }
+
+        @media screen and (min-width: 1000px) {
+            .btn {
+                width: 2.5rem;
+                height: 2.5rem;
+                font-size: 1.2rem;
+            }
+
+            .user-group {
+                width: 85%;
+            }
+
+            .btn-group {
+                width: 15%;
+            }
+        }
+
+        .btn-success {
+            background-color: green;
+            border-color: green;
+        }
+
+        .btn-danger {
+            background-color: red;
+            border-color: red;
+        }
+    </style>
+{% endblock %}

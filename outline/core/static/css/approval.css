@@ -1,0 +1,153 @@
+/* Style the tab */
+.tab {
+    overflow: hidden;
+    border: none;
+    background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+    background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+    background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+
+.nav-tabs {
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* Styles for nav-fill */
+.nav-fill > .nav-item {
+    flex: 1;
+    text-align: center;
+    border: none;
+}
+
+/* Styles for nav */
+.nav {
+    display: flex;
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+}
+
+/* Styles for nav-link */
+.nav-link {
+    width: 100%;
+    display: block;
+    padding: 0.5rem 1rem;
+    color: #5a5a5a;
+    font-weight: 500;
+    text-decoration: none;
+    border: none;
+    border-bottom: 2px solid black;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+
+.nav-link:hover {
+    color: #0056b3;
+    background-color: #ffffff;
+    text-decoration: underline;
+    border-color: dodgerblue;
+}
+
+.nav-link.active {
+    color: #fff;
+    background-color: dodgerblue;
+    border-color: #ccc;
+}
+
+li {
+    list-style: none !important;
+}
+
+.row {
+    flex-direction: row !important;
+    flex: 1;
+}
+
+.col {
+    flex-direction: column !important;
+    flex: 1 !important;
+}
+
+.inline {
+    display: inline !important;
+}
+
+.inline-flex {
+    display: inline-flex !important;
+}
+
+.avatar {
+    margin: 0 15px;
+    height: 75px;
+    width: 75px;
+}
+
+.m-0 {
+    margin: 0 !important;
+}
+
+.overflow-hidden {
+    overflow: hidden;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.alert {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    position: relative;
+    opacity: 1;
+    transition: opacity 0.6s;
+}
+
+.alert-success {
+    background-color: #dff0d8;
+    color: #3c763d;
+}
+
+.alert-info {
+    background-color: #d9edf7;
+    color: #31708f;
+}
+
+.alert-warning {
+    background-color: #fcf8e3;
+    color: #8a6d3b;
+}
+
+.alert-danger {
+    background-color: #f2dede;
+    color: #a94442;
+}

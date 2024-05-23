@@ -1,0 +1,14 @@
+{
+  "expo": {
+    "name": "SubjectOutlineMobile",
+    "slug": "SubjectOutlineMobile",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "extra": {
+    "environment": "dev"
+  },
+  "name": "SubjectOutlineMobile"
+}

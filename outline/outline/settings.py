@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,9 +43,9 @@ AUTH_USER_MODEL = 'core.User'
 import cloudinary
 
 cloudinary.config(
-    cloud_name="dd0qzygo7",
-    api_key="544345494632949",
-    api_secret="rsMExum_c-Ga0DTQOfB92R0aONw"
+    cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.environ.get("CLOUDINARY_API"),
+    api_secret=os.environ.get("CLOUDINARY_SECRET")
 )
 
 # Application definition
@@ -108,12 +111,20 @@ DATABASES = {
     'sqlite': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / "outline.sqlite3",
+    },
+    'mongo': {
+        'ENGINE': 'djongo',
+        'NAME': 'outlinedb',
     }
 }
 
 import pymysql
+from mongoengine import connect
 
 pymysql.install_as_MySQLdb()
+connect('outlinedb', host='localhost', port=27017)
+
+DATABASE_ROUTERS = ['core.routing.ModelRouter']
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

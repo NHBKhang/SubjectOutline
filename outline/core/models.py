@@ -100,7 +100,7 @@ class SubjectType(enum.Enum):
 
 
 class Course(BaseModel, ImageBaseModel):
-    code = models.CharField(max_length=10, unique=True, null=True)
+    code = models.CharField(max_length=10, unique=True, null=True, blank=True)
     name = models.CharField(max_length=50)
     en_name = models.CharField(max_length=50, null=True)
     description = models.TextField(null=True, blank=True)
@@ -116,7 +116,8 @@ class Course(BaseModel, ImageBaseModel):
         return code
 
     def save(self, *args, **kwargs):
-        self.code = self.generate_unique_code()
+        if not self.code:
+            self.code = self.generate_unique_code()
         super().save(*args, **kwargs)
 
 

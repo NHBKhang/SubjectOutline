@@ -12,4 +12,4 @@ class UserRequestAdmin(admin.admin.ModelAdmin):
         return queryset
 
 
-admin.admin_site.register(UserRequest, UserRequestAdmin)
+admin.admin_site.register(UserRequest)

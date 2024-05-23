@@ -1,3 +1,4 @@
-from django.contrib import admin
+from core.admin import admin_site
+from mail.models import *
 
-# Register your models here.
+admin_site.register(Template)

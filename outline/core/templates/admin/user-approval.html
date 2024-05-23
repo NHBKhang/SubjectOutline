@@ -146,16 +146,9 @@
         function approveStudent(userId) {
             axios.post(`${currentHost}/temp/user-requests/${userId}/add-user/`
             ).then(res => {
-                if (res.status === 200 || res.status === 201) {
+                if (res.status === 200 || res.status === 207) {
                     document.getElementById(`s${userId}`).style.display = 'none'
                     alert("User approved successfully.");
-
-                    axios.post('/mail/send-email/'
-                    ).then(res => {
-                        alert(res);
-                    }).catch(error => {
-                        alert(error);
-                    });
                 } else {
                     alert("Unexpected response from server: " + res.status);
                 }

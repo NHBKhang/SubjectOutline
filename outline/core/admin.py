@@ -43,7 +43,7 @@ admin_site = MyAdminSite(name='Subject Outline Administration')
 
 
 class FacultyAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'image', 'en_name', 'description']
+    list_display = ['id', 'name', 'image', 'en_name', ]
     search_fields = ['id', 'name']
     readonly_fields = ['my_image', 'created_date', 'updated_date']
     form = FacultyForm
@@ -56,7 +56,7 @@ class FacultyAdmin(admin.ModelAdmin):
 
 
 class MajorAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'image', 'en_name', 'description', 'credits_required', 'duration_year', 'faculty']
+    list_display = ['id', 'name', 'image', 'en_name', 'credits_required', 'duration_year', 'faculty']
     search_fields = ['id', 'name', 'faculty']
     list_filter = ['faculty']
     readonly_fields = ['my_image', 'created_date', 'updated_date']

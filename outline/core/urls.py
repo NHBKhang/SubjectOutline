@@ -15,4 +15,5 @@ r.register('comments', views.CommentViewSet, basename='comments')
 
 urlpatterns = [
     path('', include(r.urls)),
+    path('user-check/', views.UserCheckView.as_view(), name='user-check'),
 ]

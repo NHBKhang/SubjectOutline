@@ -4,6 +4,11 @@ from rest_framework.response import Response
 from core import serializers, paginators, perms
 from core.models import User, Faculty, Major, CreditHour, Course, SubjectOutline, Instructor, Comment, Like
 from django.db.models import Q, F
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+from django.views import View
+from django.http import JsonResponse
+import json
 
 
 class FacultyViewSet(viewsets.ViewSet, generics.ListAPIView):
@@ -178,3 +183,22 @@ class CommentViewSet(viewsets.ViewSet, generics.DestroyAPIView, generics.UpdateA
     queryset = Comment.objects.filter(active=True).all()
     serializer_class = serializers.CommentSerializer
     permission_classes = [perms.CommentOwner]
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class UserCheckView(View):
+    def post(self, request, *args, **kwargs):
+        try:
+            data = json.loads(request.body)
+            username = data.get('username')
+
+            if not username:
+                return JsonResponse({'error': 'Username is required'}, status=400)
+
+            if User.objects.filter(username=username).exists():
+                return JsonResponse({'exists': True, 'message': 'Username already exists'}, status=200)
+            else:
+                return JsonResponse({'exists': False}, status=200)
+
+        except json.JSONDecodeError or User.DoesNotExist:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)

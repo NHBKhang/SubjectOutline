@@ -12,7 +12,7 @@ def send_email(recipient_list, subject, text_content, html_content=None, from_em
     return requests.post(
         f"https://api.mailgun.net/v3/{settings.MAILGUN_DOMAIN}/messages",
         auth=("api", os.getenv("MAILGUN_API_KEY")),
-        data={"from": "Excited User <khang@gmail.com>" if from_email is None else from_email,
+        data={"from": "Excited User <no-reply@gmail.com>" if from_email is None else from_email,
               "to": recipient_list,
               "subject": subject,
               "text": text_content,

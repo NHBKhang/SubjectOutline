@@ -7,18 +7,32 @@ import {
     Register,
     ForgotPassword
 } from './screens/auth';
-import Home from './screens/home/Home';
-import Outline from './screens/home/Outline';
-import OutlineDetails from './screens/home/OutlineDetails';
-import Message from './screens/message/Message';
-import MessageRoom from './screens/message/MessageRoom';
-import MyWork from './screens/my_work/MyWork';
-import MyWorkDetails from './screens/my_work/MyWorkDetails';
-import Compiler from './screens/my_work/Compiler';
-import Dashboard from './screens/intro/Dashboard';
-import AdditionalInfo from './screens/intro/AdditionalInfo';
-import InstructorInfo from './screens/intro/InstructorInfo';
-import StudentInfo from './screens/intro/StudentInfo';
+import {
+    Home,
+    Outline,
+    OutlineDetails
+} from './screens/home';
+import {
+    Message,
+    MessageRoom
+} from './screens/message';
+import {
+    Compiler,
+    MyWork,
+    MyWorkDetails
+} from './screens/my_work';
+import {
+    Profile
+} from './screens/profile';
+import {
+    Settings
+} from './screens/settings';
+import {
+    Dashboard,
+    AdditionalInfo,
+    StudentInfo,
+    InstructorInfo
+} from './screens/intro';
 
 const Stack = createStackNavigator();
 
@@ -79,6 +93,30 @@ export const MessageStack = () => (
             options={{
                 title: "Tin nhắn",
                 headerLeft: backButton
+            }} />
+    </Stack.Navigator>
+)
+
+export const ProfileStack = ({ editMode, user, setUser, ...props }) => (
+    <Stack.Navigator>
+        <Stack.Screen name="Profile"
+            options={{
+                title: "Hồ sơ",
+            }}>
+            <Profile {...props}
+                editMode={editMode}
+                user={tempUser}
+                setUser={setTempUser} />
+        </Stack.Screen>
+    </Stack.Navigator>
+)
+
+export const SettingsStack = () => (
+    <Stack.Navigator>
+        <Stack.Screen name="Settings" component={Settings}
+            options={{
+                title: "Cài đặt",
+                headerLeft: null,
             }} />
     </Stack.Navigator>
 )

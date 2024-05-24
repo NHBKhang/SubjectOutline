@@ -41,15 +41,28 @@ const RegisterStudent = ({ navigation }) => {
             form.append("email", email.value.trim());
 
             try {
-                let res = await API.post(endpoints['user-requests'], form, {
+                let check = await API.post(endpoints['user-check'], {
+                    username: username.value
+                }, {
                     headers: {
-                        'Content-Type': 'multipart/form-data'
+                        'Content-Type': 'application/json'
                     }
                 });
-                console.info(res.data);
 
-                navigation.navigate('Login');
-                Alert.alert("Done", "Yêu cầu đăng ký tài khoản đã được gửi thành công");
+                if (check.data.exists) {
+                    setUsername({ value: username.value, error: check.data.message })
+                }
+                else {
+                    let res = await API.post(endpoints['user-requests'], form, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    });
+                    console.info(res.data);
+
+                    navigation.navigate('Login');
+                    Alert.alert("Done", "Yêu cầu đăng ký tài khoản đã được gửi thành công");
+                }
             } catch (ex) {
                 console.error(ex);
                 Alert.alert("Error", "Đăng ký tài khoản thất bại");

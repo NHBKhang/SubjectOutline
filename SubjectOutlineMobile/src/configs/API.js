@@ -19,6 +19,7 @@ export const endpoints = {
     'add-comment': (outlineId) => `/subject-outlines/${outlineId}/comment/`,
     'like': (outlineId) => `/subject-outlines/${outlineId}/like/`,
     'instructor': (userId) => `/instructors/${userId}/`,
+    'user-check': '/user-check/',
 };
 
 export const authApi = (accessToken) => axios.create({

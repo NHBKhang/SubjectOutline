@@ -65,7 +65,7 @@ const StudentInfo = ({ navigation }) => {
                 <H1>Nhập thông tin sinh viên</H1>
 
                 <TextInput
-                    label="Mật khẩ mới"
+                    label="Mật khẩu mới"
                     returnKeyType="done"
                     value={password.value}
                     onChangeText={text => setPassword({ value: text, error: null })}

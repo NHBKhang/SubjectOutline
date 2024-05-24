@@ -1,14 +1,18 @@
 import Context from "./configs/Context";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Profile from "./screens/profile/Profile";
-import Settings from "./screens/settings/Settings";
 import { memo, useContext, useState } from "react";
 import { Alert, StyleSheet } from "react-native";
 import { authApi, endpoints } from "./configs/API";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { toServerDate } from "./core/utils";
-import { HomeStack, MessageStack, WorkStack } from "./Stack";
+import { toMyDate, toServerDate } from "./core/utils";
+import {
+    HomeStack,
+    MessageStack,
+    WorkStack,
+    SettingsStack,
+    ProfileStack
+} from "./Stack";
 import { backButton, doneButton, editButton } from "./components/HeaderButton";
 
 const Tab = createBottomTabNavigator();
@@ -71,7 +75,6 @@ const Main = () => {
         }}>
             <Tab.Screen name="HomeStack" component={HomeStack}
                 options={{
-                    title: "Trang chủ",
                     headerShown: false,
                     tabBarIcon: ({ color, size }) => (
                         <Icon name="home"
@@ -81,7 +84,6 @@ const Main = () => {
             {user && user.is_staff &&
                 <Tab.Screen name="WorkStack" component={WorkStack}
                     options={{
-                        title: "Biên soạn",
                         headerShown: false,
                         tabBarIcon: ({ color, size }) => (
                             <Icon name="edit"
@@ -90,16 +92,15 @@ const Main = () => {
 
             <Tab.Screen name="MessageStack" component={MessageStack}
                 options={{
-                    title: "Nhắn tin",
                     headerShown: false,
                     tabBarIcon: ({ color, size }) => (
                         <Icon name="comments"
                             color={color} size={size} />)
                 }} />
 
-            <Tab.Screen name="Profile"
+            <Tab.Screen name="ProfileStack"
                 options={{
-                    title: "Hồ sơ",
+                    headerShown: false,
                     headerLeft: () => editMode ?
                         backButton(() => {
                             setEditMode(false);
@@ -111,15 +112,15 @@ const Main = () => {
                     tabBarIcon: ({ color, size }) =>
                         <Icon name="user" color={color} size={size} />
                 }} >
-                {props => <Profile {...props}
+                {props => <ProfileStack {...props}
                     editMode={editMode}
                     user={tempUser}
                     setUser={setTempUser} />}
             </Tab.Screen>
 
-            <Tab.Screen name="Settings" component={Settings}
+            <Tab.Screen name="SettingsStack" component={SettingsStack}
                 options={{
-                    title: "Cài đặt",
+                    headerShown: false,
                     tabBarIcon: ({ color, size }) => (
                         <Icon name="gear"
                             color={color} size={size} />

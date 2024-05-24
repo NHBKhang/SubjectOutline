@@ -121,6 +121,11 @@
                     document.getElementById(`i${userId}`).style.display = 'none'
                     alert("User approved successfully.");
 
+                    axios.post('/mail/send-account/', res.data, {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
                 } else {
                     alert("Unexpected response from server: " + res.status);
                 }

@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Provider } from 'react-native-paper';
 import { theme } from './src/core/theme';
-import UserReducer from './src/reducers/UserReducer';
+import UserReducer from './src/configs/Reducer';
 import Context from './src/configs/Context';
 import Main from './src/Main';
 import { AuthStack, IntroStack } from './src/Stack';

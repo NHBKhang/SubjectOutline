@@ -3,19 +3,23 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.http import JsonResponse
 from outline import settings
-from mail.utils import send_email
+from mail.utils import send_email_via_mailgun
+from core import dao as core_dao
+import json
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class SendEmailView(View):
+class SendAccountRequestView(View):
     def post(self, request, *args, **kwargs):
-        to_email = "habaokhang.la@gmail.com"
-        subject = "Hello from SendGrid"
-        html_content = "<html><body><h1>This is a test email sent using SendGrid</h1></body></html>"
+        try:
+            user = json.loads(request.body)
 
-        response = send_email(to_email, subject, html_content)
+            context = {
+                'username': user.get('name'),
+            }
+            send_email_via_mailgun('instructor-register', settings.MAILGUN_RECIPIENTS[0], context)
+            return JsonResponse({'success': True}, status=200)
+        except Exception as e:
+            print(e)
+            return JsonResponse({'error': e.__str__()}, status=400)
 
-        if response.status_code == 202:
-            return JsonResponse({"message": "Email sent successfully"}, status=response.status_code)
-        else:
-            return JsonResponse({"message": "Failed to send email"}, status=response.status_code)

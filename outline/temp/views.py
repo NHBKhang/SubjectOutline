@@ -23,14 +23,14 @@ class UserRequestViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.
                                                   instance.first_name))
 
             dao.delete_user_request(instance.id)
+            data = core_serializers.UserSerializer(user).data
             context = {
-                'username': user.username,
+                'username': data.get('name'),
                 'password': password
             }
             send_email_via_mailgun('student-register', settings.MAILGUN_RECIPIENTS[0], context)
 
-            return Response(core_serializers.UserSerializer(user).data,
-                            status=status.HTTP_207_MULTI_STATUS)
+            return Response(data, status=status.HTTP_207_MULTI_STATUS)
         except UserRequest.DoesNotExist or User.DoesNotExist:
             return Response({'error': 'Model does not exist'}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:

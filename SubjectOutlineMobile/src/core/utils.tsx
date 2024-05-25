@@ -16,6 +16,16 @@ export const passwordValidator = (password: string) => {
     return '';
 };
 
+export const confirmPasswordValidator= (password: string, confirm: string) => {
+    const err = passwordValidator(confirm);
+
+    if (isNullOrEmpty(err) && password != confirm) {
+        return 'Mật khẩu không trùng khớp.';
+    }
+
+    return err;
+}
+
 export const usernameValidator = (username: string) => {
     if (!username || username.length <= 0) return 'Tên tài khoản không thể bỏ trống.';
 
@@ -157,15 +167,7 @@ export const timeDifference = (date1, date2) => {
 };
 
 export const isNullOrEmpty = (str) => {
-    try {
-        let num = Number(str);
-        if (num === 0)
-            return true;
-        else
-            return false;
-    } catch (ex) {
-        return str == null || str.trim() === '';
-    }
+    return str == null || str.trim() === '';
 };
 
 export const outlineTranslator = (label) => {

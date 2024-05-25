@@ -15,7 +15,8 @@ const AdditionalInfo = ({ navigation }) => {
     const [user, dispatch] = useContext(Context);
     const [birthday, setBirthday] = useState({ value: user.birthday, error: null });
     const [phone, setPhone] = useState({ value: user.phone, error: null });
-
+    const [loading, setLoading] = useState(false);
+    
     const onPressContinue = async () => {
         const birthdayError = stringValidator(birthday.value, 'Ngày sinh');
         const phoneError = numberValidator(phone.value, 'Số điện thoại');
@@ -31,8 +32,8 @@ const AdditionalInfo = ({ navigation }) => {
             const form = new FormData();
             form.append('birthday', toServerDate(birthday.value));
             form.append('phone', phone.value);
-            form.append('last_login', getCurrentDate());
-                
+            if (user.is_staff) form.append('last_login', getCurrentDate());
+
             try {
                 let token = await AsyncStorage.getItem("access-token");
                 let res = await authApi(token).patch(endpoints["current-user"], form, {

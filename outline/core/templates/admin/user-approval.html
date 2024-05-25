@@ -121,7 +121,7 @@
                     document.getElementById(`i${userId}`).style.display = 'none'
                     alert("User approved successfully.");
 
-                    axios.post('/mail/send-account/', res.data, {
+                    axios.post('/mail/instructor-account/', res.data, {
                         headers: {
                             'Content-Type': 'application/json'
                         }

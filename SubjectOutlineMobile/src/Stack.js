@@ -103,10 +103,14 @@ export const ProfileStack = ({ editMode, user, setUser, ...props }) => (
             options={{
                 title: "Hồ sơ",
             }}>
-            <Profile {...props}
-                editMode={editMode}
-                user={tempUser}
-                setUser={setTempUser} />
+            {() => (
+                <Profile
+                    editMode={editMode}
+                    user={user}
+                    setUser={setUser}
+                    {...props}
+                />
+            )}
         </Stack.Screen>
     </Stack.Navigator>
 )

@@ -1,12 +1,12 @@
 import { memo, useContext, useEffect, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, View } from "react-native";
 import API, { endpoints } from "../../configs/API";
 import Avatar from "../../components/Avatar";
 import { ActivityIndicator, Text } from "react-native-paper";
 import { gStyles } from "../../core/global";
 import InputField from "../../components/InputField";
 import Context from "../../configs/Context";
-import { getMessages } from "../../configs/Firebase";
+import { addMessage, getMessages } from "../../configs/Firebase";
 import { timeDifference } from "../../core/utils";
 import { format, isSameDay } from "date-fns";
 import MessageContentCard from "../../components/cards/MessageContentCard";
@@ -40,6 +40,17 @@ const MessageRoom = ({ route }) => {
         loadMessages();
     }, [toUserId]);
 
+    const sendMessage = async (content) => {
+        try {
+            let res = await addMessage(user, content);
+
+            console.log(res.data);
+        } catch (ex) {
+            console.error(ex);
+            Alert.alert("Failed", "Gửi tin nhắn thất bại!");
+        }
+    }
+
     return (
         <>
             {toUser ? <>
@@ -72,7 +83,8 @@ const MessageRoom = ({ route }) => {
                     placeholder="Nhập tin nhắn..."
                     value={content}
                     onChangeText={text => setContent(text)}
-                    abs={true} />
+                    abs={true}
+                    onPress={() => sendMessage(content)} />
             </> : <View style={[gStyles.container, { justifyContent: 'center' }]}>
                 <ActivityIndicator />
             </View>}

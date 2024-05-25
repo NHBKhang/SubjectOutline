@@ -9,7 +9,23 @@ import json
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class SendAccountRequestView(View):
+class SendInstructorAccountView(View):
+    def post(self, request, *args, **kwargs):
+        try:
+            user = json.loads(request.body)
+
+            context = {
+                'username': user.get('name'),
+            }
+            send_email_via_mailgun('instructor-register', settings.MAILGUN_RECIPIENTS[0], context)
+            return JsonResponse({'success': True}, status=200)
+        except Exception as e:
+            print(e)
+            return JsonResponse({'error': e.__str__()}, status=400)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class SendRecoveryPasswordRequestView(View):
     def post(self, request, *args, **kwargs):
         try:
             user = json.loads(request.body)

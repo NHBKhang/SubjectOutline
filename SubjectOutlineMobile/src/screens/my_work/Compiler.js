@@ -12,10 +12,10 @@ import { isNullOrEmpty, outlineTranslator, stringValidator } from "../../core/ut
 
 const Compiler = ({ navigation }) => {
     const [outline, setOutline] = useState({
-        "title": null,
-        "year": null,
-        "course": 0,
-        "rule": null
+        "title": '',
+        "year": '',
+        "course": '',
+        "rule": ''
     });
     const [outlineError, setOutlineError] = useState({
         "title": '',

@@ -1,5 +1,6 @@
 import {
     avatarValidator,
+    confirmPasswordValidator,
     emailValidator,
     isNullOrEmpty,
     passwordValidator,
@@ -18,6 +19,7 @@ const RegisterInstructor = ({ navigation }) => {
     const [username, setUsername] = useState({ value: '', error: '' });
     const [email, setEmail] = useState({ value: '', error: '' });
     const [password, setPassword] = useState({ value: '', error: '' });
+    const [confirmPassword, setConfirmPassword] = useState({ value: '', error: '' });
     const [avatar, setAvatar] = useState({ value: null, error: '' });
     const [lastName, setLastName] = useState({ value: '', error: '' });
     const [firstName, setFirstName] = useState({ value: '', error: '' });
@@ -30,17 +32,19 @@ const RegisterInstructor = ({ navigation }) => {
         const avatarError = avatarValidator(avatar.value?.uri ?? null);
         const lastNameError = stringValidator(lastName.value, 'Họ');
         const firstNameError = stringValidator(firstName.value, 'Tên');
+        const confirmPasswordError = confirmPasswordValidator(password.value, confirmPassword.value);
 
         if (isNullOrEmpty(password.value) || isNullOrEmpty(username.value) ||
             isNullOrEmpty(email.value) || isNullOrEmpty(avatar.value?.uri ?? null) ||
-            isNullOrEmpty(lastName.value) || isNullOrEmpty(firstName.value)) {
-            password.value = null;
+            isNullOrEmpty(lastName.value) || isNullOrEmpty(firstName.value) ||
+            isNullOrEmpty(confirmPassword.value)) {
             setUsername({ ...username, error: usernameError });
             setEmail({ ...email, error: emailError });
-            setPassword({ ...password, error: passwordError });
             setAvatar({ ...avatar, error: avatarError });
             setLastName({ ...lastName, error: lastNameError });
             setFirstName({ ...firstName, error: firstNameError });
+            setPassword({ ...password, value: '', error: passwordError });
+            setConfirmPassword({ ...confirmPassword, value: '', error: confirmPasswordError });
         }
         else {
             setLoading(true);
@@ -131,11 +135,21 @@ const RegisterInstructor = ({ navigation }) => {
 
             <TextInput
                 label="Mật khẩu"
-                returnKeyType="done"
+                returnKeyType="next"
                 value={password.value}
                 onChangeText={text => setPassword({ value: text, error: '' })}
                 error={!!password.error}
                 errorText={password.error}
+                secureTextEntry />
+
+
+            <TextInput
+                label="Nhập lại mật khẩu"
+                returnKeyType="done"
+                value={confirmPassword.value}
+                onChangeText={text => setConfirmPassword({ value: text, error: '' })}
+                error={!!confirmPassword.error}
+                errorText={confirmPassword.error}
                 secureTextEntry />
 
             <ImagePicker

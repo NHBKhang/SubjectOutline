@@ -91,13 +91,16 @@ export const getMessages = async (user, toUserId) => {
     }
 };
 
-export const addMessage = async (user, message) => {
+export const addMessage = async (user, content) => {
     try {
         let idToken = await signInWithEmailAndPassword(user.email, "123456");
+        const form = new FormData();
+        form.append('content', content);
+
         await FirebaseAuth(idToken).post(endpoints["messages-by-user"](user.id),
-            message, {
+            form, {
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "multipart/form-data"
             }
         });
     } catch (error) {

@@ -1,3 +1,12 @@
+import axios from "axios";
 import getENV from "./Config";
 
-const {MAILGUN_API_KEY, MAILGUN_DOMAIN} = getENV();
+const { BASE_URL } = getENV();
+
+export const endpoints = {
+    'recovery-password': '/mail/recovery-password/',
+}
+
+export default axios.create({
+    baseURL: BASE_URL
+});

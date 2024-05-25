@@ -7,6 +7,7 @@ import Button from '../../components/Button';
 import { H1 } from '../../components/Header';
 import { emailValidator } from '../../core/utils';
 import { gStyles } from '../../core/global';
+import Mailgun, { endpoints } from '../../configs/Mailgun';
 
 const ForgotPassword = ({ navigation }) => {
   const [email, setEmail] = useState({ value: '', error: '' });
@@ -20,7 +21,7 @@ const ForgotPassword = ({ navigation }) => {
     }
 
     try {
-      //send mail
+      let res = await Mailgun.post(endpoints['recovery-password']);
 
       Alert.alert("Done", "Yêu cầu đã được gửi thành công!");
       navigation.navigate('Login');

@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from "react"
+import { memo, useContext, useEffect, useState } from "react"
 import { Alert, View } from "react-native"
 import TextInput from "../../components/TextInput";
 import { gStyles } from "../../core/global";
@@ -9,8 +9,10 @@ import { doneButton } from "../../components/HeaderButton";
 import Dropdown from "../../components/Dropdown";
 import CourseModal from "../../components/modals/CourseModal";
 import { isNullOrEmpty, outlineTranslator, stringValidator } from "../../core/utils";
+import Context from "../../configs/Context";
 
 const Compiler = ({ navigation }) => {
+    const [user, ] = useContext(Context);
     const [outline, setOutline] = useState({
         "title": '',
         "year": '',
@@ -30,10 +32,9 @@ const Compiler = ({ navigation }) => {
         setOutline(current => {
             return { ...current, [field]: value }
         })
-        if (!isNullOrEmpty(value))
-            setOutlineError(current => {
-                return { ...current, [field]: '' }
-            })
+        setOutlineError(current => {
+            return { ...current, [field]: '' }
+        })
     };
 
     useEffect(() => {
@@ -67,6 +68,7 @@ const Compiler = ({ navigation }) => {
             if (isEmpty)
                 throw Error("Empty");
 
+            outline['instructor'] = user.id;
             // let token = await AsyncStorage.getItem("access-token");
             // let res = await authApi(token).post(
             //     `${endpoints["subject-outlines"]}`,
@@ -112,21 +114,23 @@ const Compiler = ({ navigation }) => {
                 error={isNullOrEmpty(outline.year)}
                 errorText={outlineError.year} />
             <View style={[gStyles.row]}>
-                <View style={{ width: '85%' }}><Dropdown
-                    label='Môn học'
-                    mode='outlined'
-                    visible={showDropDown}
-                    showDropDown={() => setShowDropDown(true)}
-                    onDismiss={() => setShowDropDown(false)}
-                    value={outline.course.toString()}
-                    setValue={v => updateOutline("course", v)}
-                    list={courses ? courses.map(c => ({
-                        label: `${c.name}`,
-                        value: `${c.id}`
-                    })) : []} /></View>
+                {/* <View style={{ width: '85%' }}> */}
+                    <Dropdown
+                        label='Môn học'
+                        mode='outlined'
+                        visible={showDropDown}
+                        showDropDown={() => setShowDropDown(true)}
+                        onDismiss={() => setShowDropDown(false)}
+                        value={outline.course.toString()}
+                        setValue={v => updateOutline("course", v)}
+                        list={courses ? courses.map(c => ({
+                            label: `${c.name}`,
+                            value: `${c.id}`
+                        })) : []} />
+                {/* </View>
                 <View style={{ width: '12%', marginStart: '3%', marginTop: 24 }}>
                     <CourseModal />
-                </View>
+                </View> */}
             </View>
             <TextInput
                 label="Quy định môn học"

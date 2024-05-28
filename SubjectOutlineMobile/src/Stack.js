@@ -18,8 +18,10 @@ import {
 } from './screens/message';
 import {
     Compiler,
+    EvaluationDetails,
     MyWork,
-    MyWorkDetails
+    MyWorkDetails,
+    RequirementDetails
 } from './screens/my_work';
 import {
     Profile
@@ -76,6 +78,16 @@ export const WorkStack = () => {
             <Stack.Screen name='OutlineCompiler' component={Compiler}
                 options={{
                     title: "Biên soạn",
+                    headerLeft: backButton
+                }} />
+            <Stack.Screen name="RequirementDetails" component={RequirementDetails}
+                options={{
+                    title: "Điều kiện",
+                    headerLeft: backButton
+                }} />
+            <Stack.Screen name="EvaluationDetails" component={EvaluationDetails}
+                options={{
+                    title: "Đánh giá",
                     headerLeft: backButton
                 }} />
         </Stack.Navigator>

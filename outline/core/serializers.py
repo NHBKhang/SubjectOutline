@@ -244,6 +244,18 @@ class AuthenticatedSubjectOutlineSerializer(SubjectOutlineSerializer):
         fields = SubjectOutlineSerializer.Meta.fields + ['liked']
 
 
+class NestedRequirementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Requirement
+        fields = ['prerequisites', 'preceding_courses', 'co_courses', 'id']
+
+
+class NestedObjectiveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Requirement
+        fields = ['id', 'code', 'description', 'outcomes']
+
+
 class ModifySubjectOutlineSerializer(serializers.ModelSerializer):
     class Meta:
         model = SubjectOutline

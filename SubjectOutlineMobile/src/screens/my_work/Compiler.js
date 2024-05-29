@@ -67,17 +67,18 @@ const Compiler = ({ navigation }) => {
             }
             if (isEmpty)
                 throw Error("Empty");
-
+            
             outline['instructor'] = user.id;
-            // let token = await AsyncStorage.getItem("access-token");
-            // let res = await authApi(token).post(
-            //     `${endpoints["subject-outlines"]}`,
-            //     outline, {
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //         'Authorization': `Bearer ${token}`
-            //     }
-            // });
+            
+            let token = await AsyncStorage.getItem("access-token");
+            await authApi(token).post(
+                `${endpoints["subject-outlines"]}`,
+                outline, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
 
             await Alert.alert("Thêm", "Thêm đề cương mới thành công");
             navigation.goBack();

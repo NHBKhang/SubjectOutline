@@ -61,7 +61,7 @@ class CourseDetailsSerializer(CourseSerializer):
         fields = CourseSerializer.Meta.fields + ['faculty']
 
 
-class MaterialSerializer(serializers.ModelSerializer):
+class MaterialListSerializer(serializers.ModelSerializer):
     textbooks = serializers.SerializerMethodField()
     materials = serializers.SerializerMethodField()
     software = serializers.SerializerMethodField()
@@ -90,6 +90,12 @@ class MaterialSerializer(serializers.ModelSerializer):
 
 
 class RequirementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Requirement
+        fields = ['prerequisites', 'preceding_courses', 'co_courses', 'id']
+
+
+class RequirementListSerializer(serializers.ModelSerializer):
     prerequisites = SimpleCourseSerializer(many=True)
     preceding_courses = SimpleCourseSerializer(many=True)
     co_courses = SimpleCourseSerializer(many=True)
@@ -106,6 +112,12 @@ class LearningOutcomeSerializer(serializers.ModelSerializer):
 
 
 class ObjectiveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Requirement
+        fields = ['id', 'code', 'description', 'outcomes']
+
+
+class ObjectiveListSerializer(serializers.ModelSerializer):
     learning_outcomes = LearningOutcomeSerializer(many=True)
 
     class Meta:
@@ -114,6 +126,12 @@ class ObjectiveSerializer(serializers.ModelSerializer):
 
 
 class EvaluationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Evaluation
+        fields = ['id', 'type', 'method', 'time', 'learning_outcomes', 'weight']
+
+
+class EvaluationListSerializer(EvaluationSerializer):
     weight = serializers.SerializerMethodField()
     learning_outcomes = serializers.SerializerMethodField()
 
@@ -132,8 +150,8 @@ class EvaluationSerializer(serializers.ModelSerializer):
         return None
 
     class Meta:
-        model = Evaluation
-        fields = ['id', 'type', 'method', 'time', 'learning_outcomes', 'weight']
+        model = EvaluationSerializer.Meta.model
+        fields = EvaluationSerializer.Meta.fields
 
 
 class ScheduleWeekSerializer(serializers.ModelSerializer):
@@ -207,14 +225,23 @@ class InstructorSerializer(serializers.ModelSerializer):
 
 class SubjectOutlineSerializer(serializers.ModelSerializer):
     course = CourseDetailsSerializer()
+    year = serializers.SerializerMethodField()
     instructor = InstructorSerializer()
     like_count = serializers.SerializerMethodField()
     comment_count = serializers.SerializerMethodField()
     materials = serializers.SerializerMethodField()
-    requirement = RequirementSerializer()
-    objectives = ObjectiveSerializer(many=True)
-    evaluations = EvaluationSerializer(many=True)
+    requirement = RequirementListSerializer()
+    objectives = ObjectiveListSerializer(many=True)
+    evaluations = EvaluationListSerializer(many=True)
     schedule_weeks = ScheduleWeekSerializer(many=True)
+
+    def get_year(self, outline):
+        year = ''
+        print(outline.id)
+        # for y in outline.years:
+        #     year += f'{y}, '
+
+        return year.rstrip(', ')
 
     def get_like_count(self, outline):
         return Like.objects.filter(outline=outline).filter(active=True).count()
@@ -223,7 +250,7 @@ class SubjectOutlineSerializer(serializers.ModelSerializer):
         return Comment.objects.filter(outline=outline).filter(active=True).count()
 
     def get_materials(self, outline):
-        return MaterialSerializer(outline.materials.first(), many=False).data
+        return MaterialListSerializer(outline.materials.first(), many=False).data
 
     class Meta:
         model = SubjectOutline
@@ -244,22 +271,10 @@ class AuthenticatedSubjectOutlineSerializer(SubjectOutlineSerializer):
         fields = SubjectOutlineSerializer.Meta.fields + ['liked']
 
 
-class NestedRequirementSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Requirement
-        fields = ['prerequisites', 'preceding_courses', 'co_courses', 'id']
-
-
-class NestedObjectiveSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Requirement
-        fields = ['id', 'code', 'description', 'outcomes']
-
-
 class ModifySubjectOutlineSerializer(serializers.ModelSerializer):
     class Meta:
         model = SubjectOutline
-        fields = ['id', 'title', 'year', 'course', 'rule']
+        fields = ['id', 'title', 'year', 'course', 'rule', 'requirement', 'objectives', 'evaluations', 'schedule_weeks']
 
 
 class PublicUserSerializer(serializers.ModelSerializer):

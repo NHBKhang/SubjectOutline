@@ -20,6 +20,8 @@ export const endpoints = {
     'like': (outlineId) => `/subject-outlines/${outlineId}/like/`,
     'instructor': (userId) => `/instructors/${userId}/`,
     'user-check': '/user-check/',
+    'requirement': (requirementId) => `/requirements/${requirementId}/`,
+    'evaluation': (evaluationId) => `/evaluations/${evaluationId}/`,
 };
 
 export const authApi = (accessToken) => axios.create({

@@ -75,6 +75,7 @@ const Main = () => {
         }}>
             <Tab.Screen name="HomeStack" component={HomeStack}
                 options={{
+                    title: 'Nhà',
                     headerShown: false,
                     tabBarIcon: ({ color, size }) => (
                         <Icon name="home"
@@ -84,6 +85,7 @@ const Main = () => {
             {user && user.is_staff &&
                 <Tab.Screen name="WorkStack" component={WorkStack}
                     options={{
+                        title: 'Biên soạn',
                         headerShown: false,
                         tabBarIcon: ({ color, size }) => (
                             <Icon name="edit"
@@ -92,6 +94,7 @@ const Main = () => {
 
             <Tab.Screen name="MessageStack" component={MessageStack}
                 options={{
+                    title: 'Nhắn tin',
                     headerShown: false,
                     tabBarIcon: ({ color, size }) => (
                         <Icon name="comments"
@@ -100,6 +103,7 @@ const Main = () => {
 
             <Tab.Screen name="ProfileStack"
                 options={{
+                    title: 'Hồ sơ',
                     headerShown: false,
                     headerLeft: () => editMode ?
                         backButton(() => {
@@ -120,6 +124,7 @@ const Main = () => {
 
             <Tab.Screen name="SettingsStack" component={SettingsStack}
                 options={{
+                    title: 'Cài đặt',
                     headerShown: false,
                     tabBarIcon: ({ color, size }) => (
                         <Icon name="gear"

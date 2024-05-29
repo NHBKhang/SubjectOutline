@@ -2,10 +2,11 @@ from django.contrib import admin
 from django.utils.html import mark_safe
 from django.urls import path
 from django.template.response import TemplateResponse
+from django.core.exceptions import ValidationError
 from oauth2_provider.models import *
 from core import dao, serializers
 from core.models import *
-from core.forms import FacultyForm, MajorForm, CourseForm, LearningOutcomeForm, EvaluationForm
+from core.forms import FacultyForm, MajorForm, CourseForm, LearningOutcomeForm, EvaluationForm, SubjectOutlineForm
 from temp import dao as temp_dao, serializers as temp_serializers
 import cloudinary
 
@@ -119,6 +120,7 @@ class ScheduleInline(admin.TabularInline):
 
 
 class SubjectOutlineAdmin(admin.ModelAdmin):
+    form = SubjectOutlineForm
     inlines = [RequirementInline, ObjectiveInline, MaterialInline, EvaluationInline,
                ScheduleInline]
 
@@ -138,6 +140,7 @@ admin_site.register(SubjectOutline, SubjectOutlineAdmin)
 admin_site.register(Comment)
 admin_site.register(Like)
 admin_site.register(Objective, ObjectiveAdmin)
+admin_site.register(SchoolYear)
 admin_site.register(Application)
 admin_site.register(AccessToken)
 admin_site.register(RefreshToken)

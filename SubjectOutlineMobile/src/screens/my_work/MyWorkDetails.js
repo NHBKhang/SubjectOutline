@@ -11,6 +11,7 @@ import CourseModal from "../../components/modals/CourseModal";
 import Dropdown from "../../components/Dropdown";
 import { isNullOrEmpty, outlineTranslator, stringValidator } from "../../core/utils";
 import { DetailsButton } from "../../components/Button";
+import EvaluationDetails from "./EvaluationDetails";
 
 const MyWorkDetails = ({ route, navigation }) => {
     const outlineId = route.params?.outlineId;
@@ -28,10 +29,6 @@ const MyWorkDetails = ({ route, navigation }) => {
         })
     };
 
-    navigation.setOptions({
-        headerRight: () => doneButton(() => patchOutline(outlineId))
-    });
-
     useEffect(() => {
         const loadOutline = async () => {
             try {
@@ -39,7 +36,6 @@ const MyWorkDetails = ({ route, navigation }) => {
                 let res = await authApi(token).get(
                     `${endpoints["outline-details"](outlineId)}?raw=true`);
                 setOutline(res.data);
-                console.log(res.data)
             } catch (ex) {
                 setOutline([]);
                 console.error(ex);
@@ -63,7 +59,11 @@ const MyWorkDetails = ({ route, navigation }) => {
         loadCourses();
     }, [outlineId]);
 
-    const patchOutline = async (outlineId) => {
+    navigation.setOptions({
+        headerRight: () => doneButton(() => patchOutline())
+    });
+
+    const patchOutline = async () => {
         try {
             console.log(outline);
             let token = await AsyncStorage.getItem("access-token");
@@ -87,7 +87,7 @@ const MyWorkDetails = ({ route, navigation }) => {
                 ]);
         } catch (ex) {
             Alert.alert("Lỗi", "Lỗi hệ thống! Không thể cập nhật đề cương");
-            console.log(ex);
+            console.error(ex);
         }
     };
 
@@ -135,7 +135,7 @@ const MyWorkDetails = ({ route, navigation }) => {
                     <DetailsButton label="Môn học điều kiện"
                         onPress={() => navigation.navigate("RequirementDetails", {
                             courses: courses,
-                            outlineId: outline.id
+                            requirementId: outline.requirement
                         })} />
                     <DetailsButton label="Mục tiêu"
                         onPress={() => navigation.navigate("RequirementDetails", {
@@ -151,7 +151,7 @@ const MyWorkDetails = ({ route, navigation }) => {
                         })} />
                     <DetailsButton label="Đánh giá môn học"
                         onPress={() => navigation.navigate("EvaluationDetails", {
-                            outlineId: outline.id
+                            evaluationsId: outline.evaluations
                         })} />
                     <DetailsButton label="Kế hoạch giảng dạy"
                         onPress={() => navigation.navigate("RequirementDetails", {

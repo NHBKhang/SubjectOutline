@@ -1,3 +1,4 @@
+import numpy
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from ckeditor.fields import RichTextField
@@ -5,6 +6,7 @@ from cloudinary.models import CloudinaryField
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django_enumfield import enum
 from django.contrib.auth import password_validation
+from django.core.exceptions import ValidationError
 import random
 import string
 
@@ -121,13 +123,19 @@ class Course(BaseModel, ImageBaseModel):
         super().save(*args, **kwargs)
 
 
+class SchoolYear(models.Model):
+    year = models.IntegerField(null=True, unique=True)
+
+    def __str__(self):
+        return f"{self.year}"
+
+
 class SubjectOutline(BaseModel):
     title = models.CharField(max_length=50, null=True)
-    year = models.IntegerField(null=True)
+    years = models.ManyToManyField(SchoolYear, related_name='subject_outlines')
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='subject_outlines', null=True)
     instructor = models.OneToOneField(Instructor, on_delete=models.CASCADE, null=True,
                                       related_query_name='subject_outline')
-
     rule = models.TextField(null=True)
 
     def __str__(self):
@@ -140,7 +148,7 @@ class SubjectOutline(BaseModel):
 
 
 class Requirement(models.Model):
-    outline = models.OneToOneField(SubjectOutline, on_delete=models.CASCADE)
+    outline = models.OneToOneField(SubjectOutline, on_delete=models.CASCADE, unique=True)
     prerequisites = models.ManyToManyField(Course, related_name="prerequisites", null=True, blank=True)
     preceding_courses = models.ManyToManyField(Course, related_name="preceding_courses", null=True, blank=True)
     co_courses = models.ManyToManyField(Course, related_name="co_courses", null=True, blank=True)

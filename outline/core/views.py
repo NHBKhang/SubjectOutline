@@ -2,23 +2,13 @@ from rest_framework import viewsets, generics, status, parsers, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from core import serializers, paginators, perms
-from core.models import User, Faculty, Major, CreditHour, Course, SubjectOutline, Instructor, Comment, Like
+from core.models import *
 from django.db.models import Q, F
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.http import JsonResponse
 import json
-
-
-class FacultyViewSet(viewsets.ViewSet, generics.ListAPIView):
-    queryset = Faculty.objects.all()
-    serializer_class = serializers.FacultySerializer
-
-
-class MajorViewSet(viewsets.ViewSet, generics.ListAPIView):
-    queryset = Major.objects.all()
-    serializer_class = serializers.MajorSerializer
 
 
 class CourseViewSet(viewsets.ViewSet, generics.ListAPIView):
@@ -202,3 +192,24 @@ class UserCheckView(View):
 
         except json.JSONDecodeError or User.DoesNotExist:
             return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+
+class FacultyViewSet(viewsets.ViewSet, generics.ListAPIView):
+    queryset = Faculty.objects.all()
+    serializer_class = serializers.FacultySerializer
+
+
+class MajorViewSet(viewsets.ViewSet, generics.ListAPIView):
+    queryset = Major.objects.all()
+    serializer_class = serializers.MajorSerializer
+
+
+class RequirementViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
+    queryset = Requirement.objects.all()
+    serializer_class = serializers.RequirementSerializer
+
+
+class EvaluationViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
+    queryset = Evaluation.objects.all()
+    serializer_class = serializers.EvaluationSerializer
+

@@ -87,8 +87,7 @@ export const WorkStack = () => {
                 }} />
             <Stack.Screen name="EvaluationDetails" component={EvaluationDetails}
                 options={{
-                    title: "Các đánh giá",
-                    headerLeft: backButton
+                    title: "Các đánh giá"
                 }} />
             <Stack.Screen name="EvaluationCard" component={EvaluationCard}
                 options={{

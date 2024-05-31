@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { theme } from "./theme";
 
 
 export const gStyles = StyleSheet.create({
@@ -51,5 +52,11 @@ export const gStyles = StyleSheet.create({
     },
     chat: {
         margin: 10
+    },
+    textPrimary: {
+        color: theme.colors.primary
+    },
+    textError: {
+        color: theme.colors.error
     }
 })

@@ -7,10 +7,10 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { formatDateFromString, parseStringToDate } from '../core/utils';
 import { DefaultStyle } from 'react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes';
 
-type Props = React.ComponentProps<typeof Input> & { 
-    errorText?: string, 
-    type?: string, 
-    containerStyle?: DefaultStyle 
+type Props = React.ComponentProps<typeof Input> & {
+    errorText?: string,
+    type?: string,
+    containerStyle?: DefaultStyle
 };
 
 const TextInput = ({ errorText, type, containerStyle, ...props }: Props) => {
@@ -62,6 +62,7 @@ const TextInput = ({ errorText, type, containerStyle, ...props }: Props) => {
                                 onChange={onChange}
                                 is24Hour={true}
                                 display="default"
+                                onTouchCancel={() => setDate(null)}
                                 mode={type} />}
                     </TouchableOpacity>
                 </View>}

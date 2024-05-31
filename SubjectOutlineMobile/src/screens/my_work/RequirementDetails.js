@@ -7,6 +7,7 @@ import { ActivityIndicator } from "react-native-paper";
 import { H1 } from "../../components/Header";
 import { doneButton } from "../../components/HeaderButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { dropdownValue } from "../../core/utils";
 
 const RequirementDetails = ({ navigation, route }) => {
     const courses = route.params?.courses;
@@ -16,7 +17,13 @@ const RequirementDetails = ({ navigation, route }) => {
 
     const updateDropDown = (field, value) => {
         setShowDropDown(current => {
-            return { ...current, [field]: value };
+            return { ...current, [field]: value }
+        })
+    };
+
+    const updateRequirement = (field, value) => {
+        setRequirement(current => {
+            return { ...current, [field]: value }
         })
     };
 
@@ -40,12 +47,13 @@ const RequirementDetails = ({ navigation, route }) => {
 
     const patchRequirement = async () => {
         try {
+            console.info(requirement)
             const token = await AsyncStorage.getItem("access-token");
             let res = await authApi(token).patch(endpoints.requirement(requirementId),
-                {}, {
-                    headers: {
-
-                    }
+                requirement, {
+                headers: {
+                    "Content-Type": "application/json"
+                }
             });
 
             setRequirement(res.data);
@@ -69,8 +77,8 @@ const RequirementDetails = ({ navigation, route }) => {
                         visible={showDropDown?.prerequisites}
                         showDropDown={() => updateDropDown('prerequisites', true)}
                         onDismiss={() => updateDropDown('prerequisites', false)}
-                        value={requirement ? requirement.prerequisites.map(String) : ''}
-                        setValue={v => { }}
+                        value={requirement?.prerequisites.toString()}
+                        setValue={v => updateRequirement('prerequisites', dropdownValue(v))}
                         list={courses}
                         multiSelect />
                     <Dropdown
@@ -79,9 +87,9 @@ const RequirementDetails = ({ navigation, route }) => {
                         visible={showDropDown?.preceding_courses}
                         showDropDown={() => updateDropDown('preceding_courses', true)}
                         onDismiss={() => updateDropDown('preceding_courses', false)}
-                        value={requirement ? requirement.preceding_courses.map(String) : ''}
+                        value={requirement?.preceding_courses.toString()}
                         list={courses}
-                        setValue={v => { }}
+                        setValue={v => updateRequirement('preceding_courses', dropdownValue(v))}
                         multiSelect />
                     <Dropdown
                         label="Môn song hành"
@@ -89,9 +97,9 @@ const RequirementDetails = ({ navigation, route }) => {
                         visible={showDropDown?.co_courses}
                         showDropDown={() => updateDropDown('co_courses', true)}
                         onDismiss={() => updateDropDown('co_courses', false)}
-                        value={requirement ? requirement.co_courses.map(String) : ''}
+                        value={requirement?.co_courses.toString()}
                         list={courses}
-                        setValue={v => { }}
+                        setValue={v => updateRequirement('co_courses', dropdownValue(v))}
                         multiSelect />
                 </>}
         </View>

@@ -12,7 +12,9 @@ r.register('users', views.UserViewSet, basename='users')
 r.register('inactive-users', views.InactiveUserViewSet, basename='inactive-users')
 r.register('credit-hours', views.CreditHourViewSet, basename='credit-hours')
 r.register('comments', views.CommentViewSet, basename='comments')
-r.register('requirements', views.RequirementViewSet, basename='requirements'),
+r.register('school-years', views.SchoolYearViewSet, basename='school-years')
+r.register('requirements', views.RequirementViewSet, basename='requirements')
+r.register('learning-outcomes', views.LearningOutcomeViewSet, basename='learning-outcomes')
 r.register('evaluations', views.EvaluationViewSet, basename='evaluations')
 
 urlpatterns = [

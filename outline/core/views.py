@@ -204,12 +204,38 @@ class MajorViewSet(viewsets.ViewSet, generics.ListAPIView):
     serializer_class = serializers.MajorSerializer
 
 
+class SchoolYearViewSet(viewsets.ViewSet, generics.ListAPIView):
+    queryset = SchoolYear.objects.all()
+    serializer_class = serializers.SchoolYearSerializer
+
+
 class RequirementViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
     queryset = Requirement.objects.all()
     serializer_class = serializers.RequirementSerializer
 
 
+class LearningOutcomeViewSet(viewsets.ViewSet, generics.ListAPIView):
+    queryset = LearningOutcome.objects.all()
+    serializer_class = serializers.LearningOutcomeSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+        outline_id = self.request.query_params.get('outlineId', None)
+        if outline_id:
+            queryset = self.queryset.filter(evaluations__outline_id__exact=outline_id).distinct()
+
+        return queryset
+
+
 class EvaluationViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
     queryset = Evaluation.objects.all()
     serializer_class = serializers.EvaluationSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
+    def get_queryset(self):
+        queryset = self.queryset
+        outline_id = self.request.query_params.get('outlineId', None)
+        if outline_id:
+            queryset = self.queryset.filter(outline_id__exact=outline_id)
+
+        return queryset

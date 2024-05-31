@@ -7,17 +7,17 @@ import { Text } from 'react-native-paper';
 type Props = {
     title?: string,
     source?: string,
-    code?: string,
+    years?: string,
     instructor?: string,
 };
 
-const OutlineCard = ({ title, source, code, instructor }: Props) => {
+const OutlineCard = ({ title, source, years, instructor }: Props) => {
     return (
         <View style={[gStyles.row, styles.card]}>
             <Image style={styles.img} source={{ uri: source }} width={80} height={80} />
             <View style={styles.txt}>
                 <H2>{title}</H2>
-                <Text>Niên khóa: {code}</Text>
+                <Text>Niên khóa: {years}</Text>
                 <Text style={styles.instructor}>{instructor}</Text>
             </View>
         </View>

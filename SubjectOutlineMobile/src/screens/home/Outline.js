@@ -50,7 +50,7 @@ const Outline = ({ route, navigation }) => {
                   <OutlineCard
                     title={o.title}
                     source={o.course.image}
-                    code={o.year}
+                    years={o.years}
                     instructor={o.instructor.name} />
                 </TouchableOpacity>
               </View>

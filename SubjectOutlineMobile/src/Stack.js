@@ -1,4 +1,3 @@
-import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
 import { addButton, backButton } from './components/HeaderButton';
@@ -18,6 +17,7 @@ import {
 } from './screens/message';
 import {
     Compiler,
+    EvaluationCard,
     EvaluationDetails,
     MyWork,
     MyWorkDetails,
@@ -87,8 +87,12 @@ export const WorkStack = () => {
                 }} />
             <Stack.Screen name="EvaluationDetails" component={EvaluationDetails}
                 options={{
-                    title: "Đánh giá",
+                    title: "Các đánh giá",
                     headerLeft: backButton
+                }} />
+            <Stack.Screen name="EvaluationCard" component={EvaluationCard}
+                options={{
+                    title: "Đánh giá"
                 }} />
         </Stack.Navigator>
     )

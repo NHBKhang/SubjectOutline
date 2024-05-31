@@ -16,7 +16,7 @@ export const passwordValidator = (password: string) => {
     return '';
 };
 
-export const confirmPasswordValidator= (password: string, confirm: string) => {
+export const confirmPasswordValidator = (password: string, confirm: string) => {
     const err = passwordValidator(confirm);
 
     if (isNullOrEmpty(err) && password != confirm) {
@@ -199,4 +199,10 @@ export const checkPassword = async (password) => {
 export function getCurrentDate() {
     const date = new Date();
     return date.toISOString().split('T')[0];
+}
+
+export const dropdownValue = (value: any) => {
+    let arr = String(value).split(',');
+    
+    return arr.map(Number).filter(num => num > 0);
 }

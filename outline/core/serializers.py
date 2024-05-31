@@ -128,7 +128,7 @@ class ObjectiveListSerializer(serializers.ModelSerializer):
 class EvaluationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Evaluation
-        fields = ['id', 'type', 'method', 'time', 'learning_outcomes', 'weight']
+        fields = ['id', 'type', 'method', 'time', 'learning_outcomes', 'weight', 'outline']
 
 
 class EvaluationListSerializer(EvaluationSerializer):
@@ -225,7 +225,7 @@ class InstructorSerializer(serializers.ModelSerializer):
 
 class SubjectOutlineSerializer(serializers.ModelSerializer):
     course = CourseDetailsSerializer()
-    year = serializers.SerializerMethodField()
+    years = serializers.SerializerMethodField()
     instructor = InstructorSerializer()
     like_count = serializers.SerializerMethodField()
     comment_count = serializers.SerializerMethodField()
@@ -235,11 +235,10 @@ class SubjectOutlineSerializer(serializers.ModelSerializer):
     evaluations = EvaluationListSerializer(many=True)
     schedule_weeks = ScheduleWeekSerializer(many=True)
 
-    def get_year(self, outline):
+    def get_years(self, outline):
         year = ''
-        print(outline.id)
-        # for y in outline.years:
-        #     year += f'{y}, '
+        for y in outline.years.order_by('year').all():
+            year += f'{y}, '
 
         return year.rstrip(', ')
 
@@ -254,7 +253,7 @@ class SubjectOutlineSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SubjectOutline
-        fields = ['id', 'title', 'course', 'year', 'instructor', 'created_date', 'rule', 'like_count', 'comment_count',
+        fields = ['id', 'title', 'course', 'years', 'instructor', 'created_date', 'rule', 'like_count', 'comment_count',
                   'materials', 'requirement', 'objectives', 'evaluations', 'schedule_weeks']
 
 
@@ -274,7 +273,7 @@ class AuthenticatedSubjectOutlineSerializer(SubjectOutlineSerializer):
 class ModifySubjectOutlineSerializer(serializers.ModelSerializer):
     class Meta:
         model = SubjectOutline
-        fields = ['id', 'title', 'year', 'course', 'rule', 'requirement', 'objectives', 'evaluations', 'schedule_weeks']
+        fields = ['id', 'title', 'years', 'course', 'rule', 'requirement']
 
 
 class PublicUserSerializer(serializers.ModelSerializer):
@@ -336,3 +335,9 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ['id', 'user', 'outline', 'content', 'created_date', 'updated_date']
+
+
+class SchoolYearSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SchoolYear
+        fields = '__all__'

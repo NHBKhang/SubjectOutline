@@ -2,22 +2,22 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { memo, useEffect, useState } from "react";
 import { Alert, ScrollView, View } from "react-native";
 import { ActivityIndicator, Text } from "react-native-paper";
-import { H1, H2 } from "../../components/Header";
+import { H1 } from "../../components/Header";
 import { doneButton } from "../../components/HeaderButton";
 import TextInput from "../../components/TextInput";
 import API, { authApi, endpoints } from "../../configs/API";
 import { gStyles } from "../../core/global";
 import CourseModal from "../../components/modals/CourseModal";
 import Dropdown from "../../components/Dropdown";
-import { isNullOrEmpty, outlineTranslator, stringValidator } from "../../core/utils";
+import { dropdownValue } from "../../core/utils";
 import { DetailsButton } from "../../components/Button";
-import EvaluationDetails from "./EvaluationDetails";
 
 const MyWorkDetails = ({ route, navigation }) => {
     const outlineId = route.params?.outlineId;
     const [outline, setOutline] = useState(null);
     const [error, setError] = useState(null);
     const [courses, setCourses] = useState([]);
+    const [years, setYears] = useState([]);
     const [showDropDown, setShowDropDown] = useState(false);
 
     const updateOutline = (field, value) => {
@@ -44,7 +44,6 @@ const MyWorkDetails = ({ route, navigation }) => {
         const loadCourses = async () => {
             try {
                 let res = await API.get(endpoints.courses);
-
                 let data = await res.data.results.map(c => ({
                     label: `${c.name}`,
                     value: `${c.id}`
@@ -53,10 +52,23 @@ const MyWorkDetails = ({ route, navigation }) => {
             } catch (ex) {
                 console.error(ex);
             }
-        }
+        };
+        const loadYears = async () => {
+            try {
+                let res = await API.get(endpoints.years);
+                let data = await res.data.map(c => ({
+                    label: `${c.year}`,
+                    value: `${c.id}`
+                }));
+                setYears(data);
+            } catch (ex) {
+                console.error(ex);
+            }
+        };
 
         loadOutline();
         loadCourses();
+        loadYears();
     }, [outlineId]);
 
     navigation.setOptions({
@@ -65,7 +77,7 @@ const MyWorkDetails = ({ route, navigation }) => {
 
     const patchOutline = async () => {
         try {
-            console.log(outline);
+            console.info(outline.years)
             let token = await AsyncStorage.getItem("access-token");
             let res = await authApi(token).patch(
                 `${endpoints["outline-details"](outlineId)}`,
@@ -91,6 +103,12 @@ const MyWorkDetails = ({ route, navigation }) => {
         }
     };
 
+    const updateDropDown = (field, value) => {
+        setShowDropDown(current => {
+            return { ...current, [field]: value }
+        })
+    };
+
     return (
         <View style={gStyles.container}>
             {outline === null ?
@@ -107,22 +125,28 @@ const MyWorkDetails = ({ route, navigation }) => {
                         numberOfLines={2}
                         error={!!error?.title}
                         errorText={error?.title} />
-                    <TextInput
+                    <Dropdown
                         label="Niên khóa"
-                        value={outline.year?.toString()}
-                        onChangeText={t => updateOutline("year", Number(t))}
-                        keyboardType="numeric"
-                        maxLength={4}
-                        error={!!error?.year}
-                        errorText={error?.year} />
+                        mode='outlined'
+                        visible={showDropDown?.years}
+                        showDropDown={() => updateDropDown('years', true)}
+                        onDismiss={() => updateDropDown('years', false)}
+                        value={outline.years?.toString()}
+                        setValue={v => {
+                            let arr = dropdownValue(v);
+                            if (arr.length <= 2)
+                                updateOutline("years", arr);
+                        }}
+                        list={years}
+                        multiSelect />
                     {/* <View style={[gStyles.row]}>
                         <View style={{ width: '85%' }}> */}
                     <Dropdown
                         label='Môn học'
                         mode='outlined'
-                        visible={showDropDown}
-                        showDropDown={() => setShowDropDown(true)}
-                        onDismiss={() => setShowDropDown(false)}
+                        visible={showDropDown?.course}
+                        showDropDown={() => updateDropDown('course', true)}
+                        onDismiss={() => updateDropDown('course', false)}
                         value={outline.course?.toString()}
                         setValue={v => updateOutline("course", v)}
                         list={courses} />
@@ -151,7 +175,7 @@ const MyWorkDetails = ({ route, navigation }) => {
                         })} />
                     <DetailsButton label="Đánh giá môn học"
                         onPress={() => navigation.navigate("EvaluationDetails", {
-                            evaluationsId: outline.evaluations
+                            outlineId: outline.id
                         })} />
                     <DetailsButton label="Kế hoạch giảng dạy"
                         onPress={() => navigation.navigate("RequirementDetails", {

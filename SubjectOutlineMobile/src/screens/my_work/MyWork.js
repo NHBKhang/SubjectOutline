@@ -47,7 +47,7 @@ const MyWork = ({ navigation }) => {
                             <OutlineCard
                                 title={o.title}
                                 source={o.course.image}
-                                code={o.year}
+                                years={o.years}
                                 instructor={o.instructor.name} />
                         </TouchableOpacity>)}
                 </> : <View style={[gStyles.container, { justifyContent: 'center' }]}>

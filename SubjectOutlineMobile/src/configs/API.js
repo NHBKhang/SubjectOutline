@@ -10,6 +10,7 @@ export const endpoints = {
     'credit-hours': '/credit-hours/',
     'outline-details': (outlineId) => `/subject-outlines/${outlineId}/`,
     'courses': '/courses/',
+    'years': '/school-years/',
     'login': '/o/token/',
     'current-user': '/users/current-user/',
     'user-requests': '/temp/user-requests/',
@@ -21,7 +22,9 @@ export const endpoints = {
     'instructor': (userId) => `/instructors/${userId}/`,
     'user-check': '/user-check/',
     'requirement': (requirementId) => `/requirements/${requirementId}/`,
+    'evaluations': '/evaluations/',
     'evaluation': (evaluationId) => `/evaluations/${evaluationId}/`,
+    'learning-outcomes': '/learning-outcomes/',
 };
 
 export const authApi = (accessToken) => axios.create({

@@ -24,15 +24,20 @@ const EvaluationDetails = ({ navigation, route }) => {
     useEffect(() => {
         const loadEvaluations = async () => {
             try {
-                let token = await AsyncStorage.getItem("access-token");
-                let res = await authApi(token).get(
-                    `${endpoints.evaluations}?outlineId=${outlineId}`);
-                let data = res.data;
-                setEvaluations(data);
-                setTotalWeight(data.reduce((accumulator, current) => {
-                    return accumulator + current.weight;
-                }, 0));
-                setCount(data.length);
+                let token = await AsyncStorage.getItem("access-token"), res = null;
+                if (outlineId) {
+                    res = await authApi(token).get(
+                        `${endpoints.evaluations}?outlineId=${outlineId}`);
+                    let data = res.data;
+                    setEvaluations(data);
+                    setTotalWeight(data.reduce((accumulator, current) => {
+                        return accumulator + current.weight;
+                    }, 0));
+                    setCount(data.length);
+                } else {
+                    res = await authApi(token).post(endpoints.evaluations);
+                    setEvaluations(res.data);
+                }
             } catch (ex) {
                 console.error(ex);
                 Alert.alert("Error", "Không thể tải được đánh giá môn học");
@@ -67,7 +72,8 @@ const EvaluationDetails = ({ navigation, route }) => {
                                 <Evaluation
                                     instance={e}
                                     navigation={navigation}
-                                    callback={() => setCallback(true)} />
+                                    callback={() => setCallback(true)}
+                                    count={{ count, setCount }} />
                             </View>
                         ))}
                         <Evaluation
@@ -88,17 +94,18 @@ const EvaluationDetails = ({ navigation, route }) => {
     )
 }
 
-const Evaluation = ({ instance, callback, navigation }) => {
+const Evaluation = ({ instance, callback, navigation, state }) => {
     const [evaluation, setEvaluation] = useState(instance);
+    const { count, setCount } = state;
     const updateEvaluation = (field, value) => {
         setEvaluation(current => ({ ...current, [field]: value }))
-    }
+    };
 
     const deleteEvaluation = async () => {
         if (evaluation.id) {
             try {
                 let token = await AsyncStorage.getItem("access-token");
-                // await authApi(token).delete(endpoints.evaluation(evaluation));
+                await authApi(token).delete(endpoints.evaluation(evaluation));
                 Alert.alert("Done", "Xóa thành công");
             } catch (ex) {
                 console.error(ex);
@@ -107,6 +114,7 @@ const Evaluation = ({ instance, callback, navigation }) => {
         } else {
             updateEvaluation('method', null);
         }
+        setCount(count--);
     }
 
     return (
@@ -132,9 +140,10 @@ const Evaluation = ({ instance, callback, navigation }) => {
                     </TouchableOpacity>
                 </View> : <View style={{ width: '90%' }}>
                     <Divider color={'lightgray'} />
-                    <TouchableOpacity style={{ marginStart: 10 }} onPress={() =>
+                    <TouchableOpacity style={{ marginStart: 10 }} onPress={() => {
                         updateEvaluation('method', 'Đánh giá mới')
-                    }>
+                        setCount(count++);
+                    }}>
                         <Icon name="pluscircle" size={25} color={'blue'} />
                     </TouchableOpacity>
                     <Divider color={'lightgray'} />
@@ -185,7 +194,8 @@ export const EvaluationCard = ({ route, navigation }) => {
                     }
                 });
             } else {
-                res = await authApi(token).post(endpoints.evaluations, evaluation, {
+                res = await authApi(token).post(endpoints.evaluations,
+                    evaluation, {
                     headers: {
                         "Content-Type": "application/json"
                     }

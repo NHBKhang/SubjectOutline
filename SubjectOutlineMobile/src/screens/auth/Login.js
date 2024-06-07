@@ -1,19 +1,16 @@
 
 import { TouchableOpacity, StyleSheet, Text, View, Alert } from 'react-native';
-import TextInput from "../../components/TextInput";
 import React, { memo, useContext, useEffect, useState } from 'react';
-import { H1 } from "../../components/Header";
-import Button from "../../components/Button";
 import { checkPassword, getAccessToken, passwordValidator, toMyDate, usernameValidator } from "../../core/utils";
 import { theme } from '../../core/theme';
-import Logo from '../../components/Logo';
-import { ActivityIndicator, Checkbox } from 'react-native-paper';
+import { Checkbox } from 'react-native-paper';
 import API, { authApi, endpoints } from '../../configs/API';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Context from '../../configs/Context';
 import { ScrollView } from 'react-native-gesture-handler';
 import { gStyles } from '../../core/global';
 import getENV from '../../configs/Config';
+import { ActivityIndicator, Button, H1, Logo, TextInput } from '../../components';
 
 const Login = ({ navigation }) => {
     const [username, setUsername] = useState({ value: '', error: '' });

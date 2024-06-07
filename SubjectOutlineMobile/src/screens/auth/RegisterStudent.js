@@ -6,10 +6,8 @@ import {
 } from '../../core/utils';
 import React, { memo, useState } from 'react';
 import { Alert, StyleSheet } from 'react-native';
-import Button from '../../components/Button';
-import TextInput from '../../components/TextInput';
 import API, { endpoints } from '../../configs/API';
-import { ActivityIndicator } from 'react-native-paper';
+import { ActivityIndicator, Button, TextInput } from '../../components';
 
 const RegisterStudent = ({ navigation }) => {
     const [username, setUsername] = useState({ value: '', error: '' });

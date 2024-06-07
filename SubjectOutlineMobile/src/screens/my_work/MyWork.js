@@ -1,13 +1,11 @@
-import { ScrollView, StyleSheet, View } from "react-native"
-import { gStyles } from "../../core/global"
-import { memo, useContext, useEffect, useState } from "react"
-import SearchBar from "../../components/SearchBar"
-import Context from "../../configs/Context"
-import API, { endpoints } from "../../configs/API"
-import { H1 } from "../../components/Header"
-import OutlineCard from "../../components/cards/OutlineCard"
-import { ActivityIndicator } from "react-native-paper"
-import { TouchableOpacity } from "react-native-gesture-handler"
+import { ScrollView, StyleSheet, View } from "react-native";
+import { gStyles } from "../../core/global";
+import { memo, useContext, useEffect, useState } from "react";
+import { SearchBar, H1, ActivityIndicator } from "../../component";
+import Context from "../../configs/Context";
+import API, { endpoints } from "../../configs/API";
+import OutlineCard from "../../components/cards/OutlineCard";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const MyWork = ({ navigation }) => {
     const [user,] = useContext(Context);
@@ -30,7 +28,7 @@ const MyWork = ({ navigation }) => {
     }, [searchQuery]);
 
     const goToMyWorkDetails = (outlineId) => {
-        navigation.navigate("MyWorkDetails", {"outlineId": outlineId});
+        navigation.navigate("MyWorkDetails", { "outlineId": outlineId });
     }
 
     return (

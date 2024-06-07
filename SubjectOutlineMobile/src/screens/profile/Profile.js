@@ -1,11 +1,8 @@
 import { Alert, ScrollView, TouchableOpacity, View } from 'react-native';
-import Button from '../../components/Button';
 import { memo, useContext, useState } from 'react';
 import { gStyles } from '../../core/global';
-import { H1 } from '../../components/Header';
-import { ProfileTable } from '../../components/Table';
-import Avatar from '../../components/Avatar';
-import { picker, toServerDate } from '../../core/utils';
+import { ProfileTable, H1, Button, Avatar } from '../../components';
+import { picker } from '../../core/utils';
 import Context from '../../configs/Context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { authApi, endpoints } from '../../configs/API';

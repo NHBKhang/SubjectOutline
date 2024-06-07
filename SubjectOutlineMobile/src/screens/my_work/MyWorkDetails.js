@@ -2,15 +2,17 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { memo, useEffect, useState } from "react";
 import { Alert, ScrollView, View } from "react-native";
 import { ActivityIndicator, Text } from "react-native-paper";
-import { H1 } from "../../components/Header";
-import { doneButton } from "../../components/HeaderButton";
-import TextInput from "../../components/TextInput";
 import API, { authApi, endpoints } from "../../configs/API";
 import { gStyles } from "../../core/global";
 import CourseModal from "../../components/modals/CourseModal";
-import Dropdown from "../../components/Dropdown";
 import { dropdownValue } from "../../core/utils";
-import { DetailsButton } from "../../components/Button";
+import {
+    doneButton,
+    TextInput,
+    H1,
+    Dropdown,
+    DetailsButton
+} from "../../components";
 
 const MyWorkDetails = ({ route, navigation }) => {
     const outlineId = route.params?.outlineId;
@@ -162,24 +164,29 @@ const MyWorkDetails = ({ route, navigation }) => {
                             requirementId: outline.requirement
                         })} />
                     <DetailsButton label="Mục tiêu"
-                        onPress={() => navigation.navigate("RequirementDetails", {
-                            outlineId: outline.id
+                        onPress={() => navigation.navigate("ObjectiveDetails", {
+                            outlineId: outline.id,
+                            existed: outline.objectives && outline.objectives.length > 0
                         })} />
                     <DetailsButton label="Chuẩn đầu ra"
-                        onPress={() => navigation.navigate("RequirementDetails", {
-                            outlineId: outline.id
+                        onPress={() => navigation.navigate("OutcomeDetails", {
+                            outlineId: outline.id,
+                            existed: outline.learning_outcomes && outline.learning_outcomes.length > 0
                         })} />
                     <DetailsButton label="Học liệu"
-                        onPress={() => navigation.navigate("RequirementDetails", {
-                            outlineId: outline.id
+                        onPress={() => navigation.navigate("MaterialDetails", {
+                            outlineId: outline.id,
+                            existed: outline.materials && outline.materials.length > 0
                         })} />
                     <DetailsButton label="Đánh giá môn học"
                         onPress={() => navigation.navigate("EvaluationDetails", {
-                            outlineId: outline.id
+                            outlineId: outline.id,
+                            existed: outline.evaluations && outline.evaluations.length > 0
                         })} />
                     <DetailsButton label="Kế hoạch giảng dạy"
-                        onPress={() => navigation.navigate("RequirementDetails", {
-                            outlineId: outline.id
+                        onPress={() => navigation.navigate("ScheduleDetails", {
+                            outlineId: outline.id,
+                            existed: outline.schedule_weeks && outline.schedule_weeks.length > 0
                         })} />
 
                     <TextInput

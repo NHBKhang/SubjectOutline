@@ -13,7 +13,7 @@ import {
     SettingsStack,
     ProfileStack
 } from "./Stack";
-import { backButton, doneButton, editButton } from "./components/HeaderButton";
+import { backButton, doneButton, editButton } from "./components";
 
 const Tab = createBottomTabNavigator();
 

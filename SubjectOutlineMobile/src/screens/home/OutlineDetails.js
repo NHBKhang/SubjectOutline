@@ -1,17 +1,14 @@
 import { memo, useContext, useEffect, useState } from "react"
 import { Alert, Image, Keyboard, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
-import { H1, H2, H3 } from "../../components/Header";
 import API, { authApi, endpoints } from "../../configs/API";
 import { gStyles } from "../../core/global";
 import { ActivityIndicator, Checkbox, Text } from "react-native-paper";
 import moment from "moment";
 import Context from "../../configs/Context";
-import Avatar from "../../components/Avatar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import CommentCard from "../../components/cards/CommentCard";
-import Table from "../../components/Table";
-import InputField from "../../components/InputField";
+import { InputField, Table, Avatar, H1, H2, H3 } from "../../components";
 import { processString } from "../../core/utils";
 import { types } from "../../core/data";
 

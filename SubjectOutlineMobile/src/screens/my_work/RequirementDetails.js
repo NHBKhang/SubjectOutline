@@ -1,11 +1,8 @@
 import { memo, useEffect, useState } from "react"
 import { Alert, View } from "react-native";
-import Dropdown from "../../components/Dropdown";
 import API, { authApi, endpoints } from "../../configs/API";
 import { gStyles } from "../../core/global";
-import { ActivityIndicator } from "react-native-paper";
-import { H1 } from "../../components/Header";
-import { doneButton } from "../../components/HeaderButton";
+import { doneButton, H1, ActivityIndicator, Dropdown } from "../../components";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { dropdownValue } from "../../core/utils";
 

@@ -1,22 +1,24 @@
 import { memo, useContext, useState } from "react";
 import { Alert, ScrollView, View } from "react-native";
-import Button from "../../components/Button";
 import { gStyles } from "../../core/global";
-import { H1 } from "../../components/Header";
-import TextInput from "../../components/TextInput";
 import { getCurrentDate, numberValidator, stringValidator, toMyDate, toServerDate } from "../../core/utils";
-import { ActivityIndicator } from "react-native-paper";
 import Context from "../../configs/Context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { authApi, endpoints } from "../../configs/API";
-import { PaperLogo } from "../../components/Logo";
+import {
+    PaperLogo, 
+    ActivityIndicator, 
+    H1, 
+    Button, 
+    TextInput
+} from "../../components";
 
 const AdditionalInfo = ({ navigation }) => {
     const [user, dispatch] = useContext(Context);
     const [birthday, setBirthday] = useState({ value: user.birthday, error: null });
     const [phone, setPhone] = useState({ value: user.phone, error: null });
     const [loading, setLoading] = useState(false);
-    
+
     const onPressContinue = async () => {
         const birthdayError = stringValidator(birthday.value, 'Ngày sinh');
         const phoneError = numberValidator(phone.value, 'Số điện thoại');

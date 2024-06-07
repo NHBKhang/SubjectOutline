@@ -1,10 +1,9 @@
 import { memo, useContext, useEffect, useState } from "react";
 import { Alert, ScrollView, StyleSheet, View } from "react-native";
 import API, { endpoints } from "../../configs/API";
-import Avatar from "../../components/Avatar";
 import { ActivityIndicator, Text } from "react-native-paper";
 import { gStyles } from "../../core/global";
-import InputField from "../../components/InputField";
+import { InputField, Avatar } from "../../components";
 import Context from "../../configs/Context";
 import { addMessage, getMessages } from "../../configs/Firebase";
 import { timeDifference } from "../../core/utils";

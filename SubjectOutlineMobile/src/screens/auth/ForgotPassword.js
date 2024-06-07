@@ -1,13 +1,10 @@
 import React, { memo, useState } from 'react';
 import { StyleSheet, ScrollView, View, Alert } from 'react-native';
-import Logo from '../../components/Logo';
-import TextInput from '../../components/TextInput';
 import { theme } from '../../core/theme';
-import Button from '../../components/Button';
-import { H1 } from '../../components/Header';
 import { emailValidator } from '../../core/utils';
 import { gStyles } from '../../core/global';
 import Mailgun, { endpoints } from '../../configs/Mailgun';
+import { Button, H1, Logo, TextInput } from '../../components';
 
 const ForgotPassword = ({ navigation }) => {
   const [email, setEmail] = useState({ value: '', error: '' });

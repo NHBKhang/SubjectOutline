@@ -1,6 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
-import { addButton, backButton } from './components/HeaderButton';
+import { addButton, backButton } from './components';
 import {
     Login,
     Register,
@@ -8,8 +8,7 @@ import {
 } from './screens/auth';
 import {
     Home,
-    Outline,
-    OutlineDetails
+    Outline, OutlineDetails
 } from './screens/home';
 import {
     Message,
@@ -17,10 +16,10 @@ import {
 } from './screens/message';
 import {
     Compiler,
-    EvaluationCard,
-    EvaluationDetails,
-    MyWork,
-    MyWorkDetails,
+    EvaluationCard, EvaluationDetails,
+    MyWork, MyWorkDetails,
+    ObjectiveCard, ObjectiveDetails,
+    OutcomeDetails,
     RequirementDetails
 } from './screens/my_work';
 import {
@@ -85,6 +84,22 @@ export const WorkStack = () => {
                     title: "Điều kiện",
                     headerLeft: backButton
                 }} />
+            <Stack.Screen name="ObjectiveDetails" component={ObjectiveDetails}
+                options={{
+                    title: "Các mục tiêu"
+                }} />
+            <Stack.Screen name="ObjectiveCard" component={ObjectiveCard}
+                options={{
+                    title: "Mục tiêu"
+                }} />
+            <Stack.Screen name="OutcomeDetails" component={OutcomeDetails}
+                options={{
+                    title: "Các chuẩn đầu ra"
+                }} />
+            {/* <Stack.Screen name="EvaluationCard" component={EvaluationCard}
+                options={{
+                    title: "Đánh giá"
+                }} /> */}
             <Stack.Screen name="EvaluationDetails" component={EvaluationDetails}
                 options={{
                     title: "Các đánh giá"

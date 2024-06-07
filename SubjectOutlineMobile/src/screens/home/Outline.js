@@ -1,11 +1,9 @@
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { gStyles } from '../../core/global';
-import SearchBar from '../../components/SearchBar';
 import { memo, useEffect, useState } from 'react';
-import { H1 } from '../../components/Header';
+import { H1, ActivityIndicator, SearchBar } from '../../components';
 import API, { endpoints } from '../../configs/API';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { ActivityIndicator } from 'react-native-paper';
 import OutlineCard from '../../components/cards/OutlineCard';
 
 const Outline = ({ route, navigation }) => {

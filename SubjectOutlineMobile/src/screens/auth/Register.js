@@ -4,11 +4,10 @@ import { TabView, SceneMap } from 'react-native-tab-view';
 import RegisterInstructor from './RegisterInstructor';
 import RegisterStudent from './RegisterStudent';
 import { gStyles } from '../../core/global';
-import Logo from '../../components/Logo';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { theme } from '../../core/theme';
 import { Text } from 'react-native-paper';
-import { H1 } from '../../components/Header';
+import { H1, Logo } from '../../components';
 
 const RegisterTabView = ({ navigation }) => {
     const layout = useWindowDimensions();

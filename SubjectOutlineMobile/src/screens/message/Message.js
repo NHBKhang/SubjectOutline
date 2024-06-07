@@ -1,11 +1,9 @@
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { memo, useContext, useEffect, useState } from 'react';
 import { gStyles } from '../../core/global';
-import SearchBar from '../../components/SearchBar';
 import { authApi, endpoints } from '../../configs/API';
-import Avatar from '../../components/Avatar';
+import { Avatar, SearchBar, ActivityIndicator } from '../../components';
 import { TouchableHighlight } from 'react-native-gesture-handler';
-import { ActivityIndicator } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAllMessages } from '../../configs/Firebase';
 import Context from '../../configs/Context';

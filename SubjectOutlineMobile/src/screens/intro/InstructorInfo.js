@@ -1,16 +1,18 @@
-import { memo, useEffect, useState } from "react"
-import { ScrollView, View } from "react-native"
-import Button from "../../components/Button";
-import { ActivityIndicator } from "react-native-paper";
+import { memo, useEffect, useState } from "react";
+import { ScrollView, View } from "react-native";
 import { gStyles } from "../../core/global";
-import { H1 } from "../../components/Header";
 import API, { authApi, endpoints } from "../../configs/API";
-import Dropdown from "../../components/Dropdown";
 import { numberValidator } from "../../core/utils";
-import TextInput from "../../components/TextInput";
 import { degree } from "../../core/data";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { PaperLogo } from "../../components/Logo";
+import {
+    PaperLogo,
+    TextInput, 
+    Dropdown, 
+    H1, 
+    ActivityIndicator, 
+    Button
+} from "../../components";
 
 const InstructorInfo = ({ navigation, route }) => {
     const userId = route.params?.userId;

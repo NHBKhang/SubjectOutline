@@ -9,11 +9,8 @@ import {
 } from '../../core/utils';
 import React, { memo, useState } from 'react';
 import { Alert, StyleSheet } from 'react-native';
-import Button from '../../components/Button';
-import TextInput from '../../components/TextInput';
-import ImagePicker from '../../components/ImagePicker';
 import API, { endpoints } from '../../configs/API';
-import { ActivityIndicator } from 'react-native-paper';
+import { ActivityIndicator, Button, ImagePicker, TextInput } from '../../components';
 
 const RegisterInstructor = ({ navigation }) => {
     const [username, setUsername] = useState({ value: '', error: '' });

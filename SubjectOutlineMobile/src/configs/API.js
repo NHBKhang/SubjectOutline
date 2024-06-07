@@ -22,6 +22,7 @@ export const endpoints = {
     'instructor': (userId) => `/instructors/${userId}/`,
     'user-check': '/user-check/',
     'requirement': (requirementId) => `/requirements/${requirementId}/`,
+    'objective': (objectiveId) => `/objectives/${objectiveId}`,
     'evaluations': '/evaluations/',
     'evaluation': (evaluationId) => `/evaluations/${evaluationId}/`,
     'learning-outcomes': '/learning-outcomes/',

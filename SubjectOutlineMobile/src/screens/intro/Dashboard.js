@@ -1,10 +1,7 @@
 import React, { memo } from 'react';
-import { H1 } from '../../components/Header';
-import Paragraph from '../../components/Paragraph';
-import Button from '../../components/Button';
 import { ScrollView, View } from 'react-native';
 import { gStyles } from '../../core/global';
-import { PaperLogo } from '../../components/Logo';
+import { PaperLogo, Button, Paragraph, H1 } from '../../components';
 
 const Dashboard = ({ navigation }) => (
     <ScrollView>

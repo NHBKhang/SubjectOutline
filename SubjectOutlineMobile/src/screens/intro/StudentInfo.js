@@ -1,15 +1,17 @@
-import { Alert, ScrollView, View } from "react-native"
-import { gStyles } from "../../core/global"
-import { memo, useContext, useState } from "react"
-import { ActivityIndicator } from "react-native-paper";
-import Button from "../../components/Button";
-import ImagePicker from "../../components/ImagePicker";
+import { Alert, ScrollView, View } from "react-native";
+import { gStyles } from "../../core/global";
+import { memo, useContext, useState } from "react";
 import { avatarValidator, confirmPasswordValidator, getCurrentDate, isNullOrEmpty, passwordValidator, toMyDate } from "../../core/utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { authApi, endpoints } from "../../configs/API";
-import TextInput from "../../components/TextInput";
-import { PaperLogo } from "../../components/Logo";
-import { H1 } from "../../components/Header";
+import {
+    H1,
+    PaperLogo,
+    TextInput,
+    ImagePicker,
+    Button,
+    ActivityIndicator
+} from "../../components";
 import Context from "../../configs/Context";
 
 const StudentInfo = ({ navigation }) => {

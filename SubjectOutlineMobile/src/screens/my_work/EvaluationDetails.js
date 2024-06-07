@@ -1,21 +1,24 @@
-import { Alert, ScrollView, View } from "react-native"
-import { gStyles } from "../../core/global"
-import { memo, useEffect, useState } from "react"
-import { H1, H2 } from "../../components/Header";
-import { ActivityIndicator, Text } from "react-native-paper";
+import { Alert, ScrollView, View } from "react-native";
+import { gStyles } from "../../core/global";
+import { memo, useEffect, useState } from "react";
+import { Text } from "react-native-paper";
 import API, { authApi, endpoints } from "../../configs/API";
-import TextInput from "../../components/TextInput";
-import Dropdown from "../../components/Dropdown";
 import { evaluationType } from "../../core/data";
-import Divider from "../../components/Divider";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { backButton, doneButton } from "../../components/HeaderButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { dropdownValue, toServerDate } from "../../core/utils";
 import Icon from 'react-native-vector-icons/AntDesign';
+import {
+    ActivityIndicator,
+    backButton, doneButton,
+    Divider,
+    Dropdown,
+    TextInput,
+    H1, H2
+} from "../../components";
 
 const EvaluationDetails = ({ navigation, route }) => {
-    const outlineId = route.params?.outlineId;
+    const { existed, outlineId } = route.params;
     const [evaluations, setEvaluations] = useState([]);
     const [callback, setCallback] = useState(false);
     const [totalWeight, setTotalWeight] = useState(0);
@@ -25,7 +28,7 @@ const EvaluationDetails = ({ navigation, route }) => {
         const loadEvaluations = async () => {
             try {
                 let token = await AsyncStorage.getItem("access-token"), res = null;
-                if (outlineId) {
+                if (existed) {
                     res = await authApi(token).get(
                         `${endpoints.evaluations}?outlineId=${outlineId}`);
                     let data = res.data;
@@ -47,7 +50,7 @@ const EvaluationDetails = ({ navigation, route }) => {
 
         loadEvaluations();
         setCallback(false);
-    }, [outlineId, callback]);
+    }, [outlineId, existed, callback]);
 
     navigation.setOptions({
         headerLeft: () => backButton(() => {
@@ -61,35 +64,31 @@ const EvaluationDetails = ({ navigation, route }) => {
 
     return (
         <View style={gStyles.container}>
-            <ScrollView style={gStyles.w100}>
-                <H1>Đánh giá môn học</H1>
-                {evaluations === null ?
-                    <View style={[gStyles.container, { justifyContent: 'center' }]}>
-                        <ActivityIndicator />
-                    </View> : <>
-                        {evaluations.map((e, index) => (
-                            <View key={index}>
-                                <Evaluation
-                                    instance={e}
-                                    navigation={navigation}
-                                    callback={() => setCallback(true)}
-                                    count={{ count, setCount }} />
-                            </View>
-                        ))}
-                        <Evaluation
-                            instance={{ outline: outlineId }}
-                            navigation={navigation}
-                            callback={() => setCallback(true)} />
-                        <View style={{ width: '90%' }}>
-                            <Divider color={'lightgray'} />
-                            <View style={[gStyles.row, { justifyContent: 'space-between' }]}>
-                                <H2 style={weightStyle}>Tổng tỉ lệ:</H2>
-                                <H2 style={weightStyle}>{totalWeight}</H2>
-                            </View>
-                            <Divider color={'lightgray'} />
+            <H1>Đánh giá môn học</H1>
+            {evaluations ?
+                <ActivityIndicator /> : <>
+                    {evaluations.map((e, index) => (
+                        <View key={index}>
+                            <Evaluation
+                                instance={e}
+                                navigation={navigation}
+                                callback={() => setCallback(true)}
+                                state={{ count, setCount }} />
                         </View>
-                    </>}
-            </ScrollView>
+                    ))}
+                    <Evaluation
+                        instance={{ outline: outlineId }}
+                        navigation={navigation}
+                        callback={() => setCallback(true)} />
+                    <View style={{ width: '90%' }}>
+                        <Divider color={'lightgray'} />
+                        <View style={[gStyles.row, { justifyContent: 'space-between' }]}>
+                            <H2 style={weightStyle}>Tổng tỉ lệ:</H2>
+                            <H2 style={weightStyle}>{totalWeight}</H2>
+                        </View>
+                        <Divider color={'lightgray'} />
+                    </View>
+                </>}
         </View>
     )
 }
@@ -159,15 +158,11 @@ export const EvaluationCard = ({ route, navigation }) => {
     const [learningOutcomes, setLearningOutcomes] = useState([]);
 
     const updateDropDown = (field, value) => {
-        setShowDropDown(current => {
-            return { ...current, [field]: value }
-        })
+        setShowDropDown(current => ({ ...current, [field]: value }))
     };
-
-    navigation.setOptions({
-        headerRight: () => doneButton(() => patchEvaluation()),
-        headerLeft: () => backButton(callback)
-    });
+    const updateEvaluation = (field, value) => {
+        setEvaluation(current => ({ ...current, [field]: value }))
+    };
 
     useEffect(() => {
         const loadLearningOutcomes = async () => {
@@ -209,54 +204,55 @@ export const EvaluationCard = ({ route, navigation }) => {
         }
     };
 
-    const updateEvaluation = (field, value) => {
-        setEvaluation(current => {
-            return { ...current, [field]: value }
-        })
-    };
+    navigation.setOptions({
+        headerRight: () => doneButton(() => patchEvaluation()),
+        headerLeft: () => backButton(callback)
+    });
 
     return (
         <View style={gStyles.container}>
-            <Text>Mã đánh giá: {evaluation?.id}</Text>
-            <Dropdown
-                label="Thành phần đánh giá"
-                mode="outlined"
-                visible={showDropDown?.type}
-                onDismiss={() => updateDropDown('type', false)}
-                showDropDown={() => updateDropDown('type', true)}
-                value={evaluation.type?.toString()}
-                setValue={v => updateEvaluation('type', v)}
-                list={evaluationType} />
-            <TextInput
-                label="Bài đánh giá"
-                value={evaluation.method}
-                onChangeText={t => updateEvaluation('method', t)}
-                returnKeyType="next" />
-            <TextInput
-                label="Thời điểm"
-                value={evaluation.time}
-                onChangeText={t => updateEvaluation('time', toServerDate(t))}
-                returnKeyType="next"
-                type="date" />
-            <Dropdown
-                label="CĐR môn học"
-                mode="outlined"
-                visible={showDropDown?.clo}
-                onDismiss={() => updateDropDown('clo', false)}
-                showDropDown={() => updateDropDown('clo', true)}
-                value={evaluation.learning_outcomes ? evaluation.learning_outcomes.toString() : ''}
-                setValue={v => updateEvaluation('learning_outcomes', dropdownValue(v))}
-                list={learningOutcomes?.map(l => ({
-                    value: `${l.id}`,
-                    label: l.code
-                }))}
-                multiSelect />
-            <TextInput
-                label="Tỉ lệ"
-                returnKeyType="done"
-                onChangeText={t => updateEvaluation('weight', t)}
-                value={evaluation.weight?.toString()}
-                keyboardType="numeric" />
+            <ScrollView style={gStyles.w100}>
+                <Text>Mã đánh giá: {evaluation?.id}</Text>
+                <Dropdown
+                    label="Thành phần đánh giá"
+                    mode="outlined"
+                    visible={showDropDown?.type}
+                    onDismiss={() => updateDropDown('type', false)}
+                    showDropDown={() => updateDropDown('type', true)}
+                    value={evaluation.type?.toString()}
+                    setValue={v => updateEvaluation('type', v)}
+                    list={evaluationType} />
+                <TextInput
+                    label="Bài đánh giá"
+                    value={evaluation.method}
+                    onChangeText={t => updateEvaluation('method', t)}
+                    returnKeyType="next" />
+                <TextInput
+                    label="Thời điểm"
+                    value={evaluation.time}
+                    onChangeText={t => updateEvaluation('time', toServerDate(t))}
+                    returnKeyType="next"
+                    type="date" />
+                <Dropdown
+                    label="CĐR môn học"
+                    mode="outlined"
+                    visible={showDropDown?.clo}
+                    onDismiss={() => updateDropDown('clo', false)}
+                    showDropDown={() => updateDropDown('clo', true)}
+                    value={evaluation.learning_outcomes ? evaluation.learning_outcomes.toString() : ''}
+                    setValue={v => updateEvaluation('learning_outcomes', dropdownValue(v))}
+                    list={learningOutcomes?.map(l => ({
+                        value: `${l.id}`,
+                        label: l.code
+                    }))}
+                    multiSelect />
+                <TextInput
+                    label="Tỉ lệ"
+                    returnKeyType="done"
+                    onChangeText={t => updateEvaluation('weight', t)}
+                    value={evaluation.weight?.toString()}
+                    keyboardType="numeric" />
+            </ScrollView>
         </View>
     )
 }

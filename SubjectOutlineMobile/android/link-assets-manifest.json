@@ -1,17 +1,4 @@
 {
   "migIndex": 1,
-  "data": [
-    {
-      "path": "src/assets/background_dot.png",
-      "sha1": "eb246a96d6ffcde56e6fdf00b1ee8ac0d73d77b6"
-    },
-    {
-      "path": "src/assets/logo.png",
-      "sha1": "b89a259f7f214f47c084163825eee0964db3af96"
-    },
-    {
-      "path": "src/assets/paper_logo.png",
-      "sha1": "7510a8d5b474d5e1378b08992aae4c4c6dbb690c"
-    }
-  ]
+  "data": []
 }

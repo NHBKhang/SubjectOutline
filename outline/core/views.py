@@ -232,7 +232,7 @@ class ObjectiveViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.Re
 class LearningOutcomeViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
     queryset = LearningOutcome.objects.all()
     serializer_class = serializers.LearningOutcomeSerializer
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         queryset = self.queryset

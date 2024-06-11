@@ -1,0 +1,10 @@
+{
+    "rules": {
+        "messages": {
+            "$messageId": {
+                ".read": "auth != null && (data.child('sender').val() === auth.uid || data.child('receiver').val() === auth.uid)",
+                ".write": "auth != null && (newData.child('sender').val() === auth.uid || newData.child('receiver').val() === auth.uid)"
+            }
+        }
+    }
+}

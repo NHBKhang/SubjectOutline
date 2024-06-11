@@ -1,0 +1,16 @@
+{
+    "messages": {
+        "message1": {
+            "sender": "khang",
+            "receiver": "admin",
+            "timestamp": 1625247600000,
+            "text": "Hello, how are you?"
+        },
+        "message2": {
+            "sender": "admin",
+            "receiver": "khang",
+            "timestamp": 1625247660000,
+            "text": "I'm fine, thanks!"
+        }
+    }
+}

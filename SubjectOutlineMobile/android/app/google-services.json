@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "388047601434",
+    "firebase_url": "https://subjectoutline-default-rtdb.firebaseio.com",
+    "project_id": "subjectoutline",
+    "storage_bucket": "subjectoutline.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:388047601434:android:6c239f1ac9c30188c2b6a3",
+        "android_client_info": {
+          "package_name": "com.subjectoutlinemobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3rOwSXSKAawEUg8tTt7c2nvJMk5W4DTM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

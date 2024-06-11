@@ -160,6 +160,20 @@ export const processString = (inputString) => {
     }
 };
 
+export const firstRowSplit = (inputString) => {
+    let processedString = '';
+    if (inputString) {
+        for (let i = 0; i < inputString.length; i++) {
+            if (inputString[i] === '\n') {
+                break;
+            } else {
+                processedString += inputString[i];
+            }
+        }
+    }
+    return processedString;
+};
+
 export const timeDifference = (date1, date2) => {
     const diffInMilliseconds = Math.abs(date1.getTime() - date2.getTime());
     const diffInMinutes = diffInMilliseconds / (1000 * 60);

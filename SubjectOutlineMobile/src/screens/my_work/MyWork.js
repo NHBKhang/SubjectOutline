@@ -1,7 +1,7 @@
 import { ScrollView, StyleSheet, View } from "react-native";
 import { gStyles } from "../../core/global";
 import { memo, useContext, useEffect, useState } from "react";
-import { SearchBar, H1, ActivityIndicator } from "../../component";
+import { SearchBar, H1, ActivityIndicator } from "../../components";
 import Context from "../../configs/Context";
 import API, { endpoints } from "../../configs/API";
 import OutlineCard from "../../components/cards/OutlineCard";

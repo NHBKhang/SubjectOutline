@@ -21,11 +21,18 @@ export const endpoints = {
     'like': (outlineId) => `/subject-outlines/${outlineId}/like/`,
     'instructor': (userId) => `/instructors/${userId}/`,
     'user-check': '/user-check/',
+    'requirements': '/requirements/',
     'requirement': (requirementId) => `/requirements/${requirementId}/`,
-    'objective': (objectiveId) => `/objectives/${objectiveId}`,
+    'objectives': '/objectives/',
+    'objective': (objectiveId) => `/objectives/${objectiveId}/`,
+    'learning-outcomes': '/learning-outcomes/',
+    'learning-outcome': (outcomeId) => `/learning-outcomes/${outcomeId}/`,
+    'materials': '/materials/',
+    'material': (materialId) => `/materials/${materialId}/`,
     'evaluations': '/evaluations/',
     'evaluation': (evaluationId) => `/evaluations/${evaluationId}/`,
-    'learning-outcomes': '/learning-outcomes/',
+    'schedule-weeks': '/schedule-weeks/',
+    'schedule-week': (weekId) => `/schedule-weeks/${weekId}/`,
 };
 
 export const authApi = (accessToken) => axios.create({

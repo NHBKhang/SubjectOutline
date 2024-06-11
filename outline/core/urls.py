@@ -14,8 +14,11 @@ r.register('credit-hours', views.CreditHourViewSet, basename='credit-hours')
 r.register('comments', views.CommentViewSet, basename='comments')
 r.register('school-years', views.SchoolYearViewSet, basename='school-years')
 r.register('requirements', views.RequirementViewSet, basename='requirements')
+r.register('objectives', views.ObjectiveViewSet, basename='objectives')
 r.register('learning-outcomes', views.LearningOutcomeViewSet, basename='learning-outcomes')
+r.register('materials', views.MaterialViewSet, basename='materials')
 r.register('evaluations', views.EvaluationViewSet, basename='evaluations')
+r.register('schedule-weeks', views.ScheduleWeekViewSet, basename='schedule-weeks')
 
 urlpatterns = [
     path('', include(r.urls)),

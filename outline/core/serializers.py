@@ -61,6 +61,12 @@ class CourseDetailsSerializer(CourseSerializer):
         fields = CourseSerializer.Meta.fields + ['faculty']
 
 
+class MaterialSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Material
+        fields = ['id', 'no', 'type', 'content']
+
+
 class MaterialListSerializer(serializers.ModelSerializer):
     textbooks = serializers.SerializerMethodField()
     materials = serializers.SerializerMethodField()
@@ -105,16 +111,18 @@ class RequirementListSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class LearningOutcomeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = LearningOutcome
-        fields = '__all__'
-
-
 class ObjectiveSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Requirement
-        fields = ['id', 'code', 'description', 'outcomes']
+        model = Objective
+        fields = ['id', 'code', 'description', 'outcome', 'outline']
+
+
+class LearningOutcomeSerializer(serializers.ModelSerializer):
+    objective = ObjectiveSerializer()
+
+    class Meta:
+        model = LearningOutcome
+        fields = ['id', 'code', 'description', 'objective']
 
 
 class ObjectiveListSerializer(serializers.ModelSerializer):
@@ -155,6 +163,12 @@ class EvaluationListSerializer(EvaluationSerializer):
 
 
 class ScheduleWeekSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ScheduleWeek
+        fields = ['id', 'week', 'content', 'outcomes', 'evaluations', 'materials', 'outline']
+
+
+class ScheduleWeekListSerializer(ScheduleWeekSerializer):
     outcomes = serializers.SerializerMethodField()
     evaluations = serializers.SerializerMethodField()
     materials = serializers.SerializerMethodField()
@@ -187,8 +201,8 @@ class ScheduleWeekSerializer(serializers.ModelSerializer):
         return None
 
     class Meta:
-        model = ScheduleWeek
-        fields = '__all__'
+        model = ScheduleWeekSerializer.Meta.model
+        fields = ScheduleWeekSerializer.Meta.fields
 
 
 class InstructorSerializer(serializers.ModelSerializer):
@@ -233,7 +247,7 @@ class SubjectOutlineSerializer(serializers.ModelSerializer):
     requirement = RequirementListSerializer()
     objectives = ObjectiveListSerializer(many=True)
     evaluations = EvaluationListSerializer(many=True)
-    schedule_weeks = ScheduleWeekSerializer(many=True)
+    schedule_weeks = ScheduleWeekListSerializer(many=True)
 
     def get_years(self, outline):
         year = ''
@@ -273,7 +287,8 @@ class AuthenticatedSubjectOutlineSerializer(SubjectOutlineSerializer):
 class ModifySubjectOutlineSerializer(serializers.ModelSerializer):
     class Meta:
         model = SubjectOutline
-        fields = ['id', 'title', 'years', 'course', 'rule', 'requirement']
+        fields = ['id', 'title', 'years', 'course', 'rule', 'requirement', 'objectives', 'evaluations', 'materials',
+                  'schedule_weeks']
 
 
 class PublicUserSerializer(serializers.ModelSerializer):

@@ -159,9 +159,9 @@ class Requirement(models.Model):
 
 class Objective(models.Model):
     outline = models.ForeignKey(SubjectOutline, on_delete=models.CASCADE, related_name='objectives')
-    code = models.CharField(max_length=5, null=True)
-    description = models.TextField(null=True)
-    outcome = models.TextField()
+    code = models.CharField(max_length=5, null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+    outcome = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.code} - {self.outline.title}'
@@ -185,7 +185,7 @@ class EvaluationType(enum.Enum):
 class Evaluation(models.Model):
     outline = models.ForeignKey(SubjectOutline, on_delete=models.CASCADE, related_name='evaluations')
     type = enum.EnumField(EvaluationType, default=EvaluationType.FORMATIVE, null=True, blank=True)
-    method = models.CharField(max_length=50)
+    method = models.CharField(max_length=50, null=True, blank=True)
     time = models.DateField(null=True, blank=True)
     learning_outcomes = models.ManyToManyField(LearningOutcome, related_name="evaluations", null=True, blank=True)
     weight = models.FloatField(null=True, blank=True)

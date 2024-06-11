@@ -212,17 +212,47 @@ class SchoolYearViewSet(viewsets.ViewSet, generics.ListAPIView):
 class RequirementViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
     queryset = Requirement.objects.all()
     serializer_class = serializers.RequirementSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
 
-class LearningOutcomeViewSet(viewsets.ViewSet, generics.ListAPIView):
+class ObjectiveViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
+    queryset = Objective.objects.all()
+    serializer_class = serializers.ObjectiveSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = self.queryset
+        outline_id = self.request.query_params.get('outlineId', None)
+        if outline_id:
+            queryset = self.queryset.filter(outline_id=outline_id)
+
+        return queryset
+
+
+class LearningOutcomeViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
     queryset = LearningOutcome.objects.all()
     serializer_class = serializers.LearningOutcomeSerializer
+    # permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         queryset = self.queryset
         outline_id = self.request.query_params.get('outlineId', None)
         if outline_id:
             queryset = self.queryset.filter(evaluations__outline_id__exact=outline_id).distinct()
+
+        return queryset
+
+
+class MaterialViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
+    queryset = Material.objects.all()
+    serializer_class = serializers.MaterialSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = self.queryset
+        outline_id = self.request.query_params.get('outlineId', None)
+        if outline_id:
+            queryset = self.queryset.filter(outline_id=outline_id)
 
         return queryset
 
@@ -236,6 +266,20 @@ class EvaluationViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.R
         queryset = self.queryset
         outline_id = self.request.query_params.get('outlineId', None)
         if outline_id:
-            queryset = self.queryset.filter(outline_id__exact=outline_id)
+            queryset = self.queryset.filter(outline_id=outline_id)
+
+        return queryset
+
+
+class ScheduleWeekViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
+    queryset = ScheduleWeek.objects.all()
+    serializer_class = serializers.ScheduleWeekSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = self.queryset
+        outline_id = self.request.query_params.get('outlineId', None)
+        if outline_id:
+            queryset = self.queryset.filter(outline_id=outline_id)
 
         return queryset

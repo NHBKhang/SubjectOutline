@@ -1,14 +1,13 @@
 import { memo, useEffect, useState } from "react"
 import { Alert, View } from "react-native";
-import API, { authApi, endpoints } from "../../configs/API";
+import { authApi, endpoints } from "../../configs/API";
 import { gStyles } from "../../core/global";
 import { doneButton, H1, ActivityIndicator, Dropdown } from "../../components";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { dropdownValue } from "../../core/utils";
 
 const RequirementDetails = ({ navigation, route }) => {
-    const courses = route.params?.courses;
-    const requirementId = route.params?.requirementId;
+    const { requirementId, outlineId, courses } = route.params;
     const [showDropDown, setShowDropDown] = useState(false);
     const [requirement, setRequirement] = useState(null);
 
@@ -17,7 +16,6 @@ const RequirementDetails = ({ navigation, route }) => {
             return { ...current, [field]: value }
         })
     };
-
     const updateRequirement = (field, value) => {
         setRequirement(current => {
             return { ...current, [field]: value }
@@ -27,7 +25,16 @@ const RequirementDetails = ({ navigation, route }) => {
     useEffect(() => {
         const loadRequirement = async () => {
             try {
-                let res = await API.get(endpoints.requirement(requirementId));
+                let token = await AsyncStorage.getItem("access-token"), res = null;
+                if (requirementId)
+                    res = await authApi(token).get(endpoints.requirement(requirementId));
+                else
+                    res = await authApi(token).post(endpoints.requirements,
+                        { outline: outlineId }, {
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    });
                 setRequirement(res.data);
             } catch (ex) {
                 console.error(ex);
@@ -36,7 +43,7 @@ const RequirementDetails = ({ navigation, route }) => {
             }
         }
         loadRequirement();
-    }, [requirementId]);
+    }, [requirementId, outlineId]);
 
     navigation.setOptions({
         headerRight: () => doneButton(() => patchRequirement())

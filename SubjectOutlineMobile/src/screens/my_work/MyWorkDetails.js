@@ -90,7 +90,6 @@ const MyWorkDetails = ({ route, navigation }) => {
                 }
             });
             setOutline(res.data);
-
             Alert.alert("Cập nhật", "Cập nhật đề cương thành công",
                 [
                     {
@@ -161,32 +160,28 @@ const MyWorkDetails = ({ route, navigation }) => {
                     <DetailsButton label="Môn học điều kiện"
                         onPress={() => navigation.navigate("RequirementDetails", {
                             courses: courses,
-                            requirementId: outline.requirement
+                            requirementId: outline.requirement,
+                            outlineId: outline.id
                         })} />
                     <DetailsButton label="Mục tiêu"
-                        onPress={() => navigation.navigate("ObjectiveDetails", {
-                            outlineId: outline.id,
-                            existed: outline.objectives && outline.objectives.length > 0
+                        onPress={() => navigation.navigate("ObjectivesDetails", {
+                            outlineId: outline.id
                         })} />
                     <DetailsButton label="Chuẩn đầu ra"
-                        onPress={() => navigation.navigate("OutcomeDetails", {
-                            outlineId: outline.id,
-                            existed: outline.learning_outcomes && outline.learning_outcomes.length > 0
+                        onPress={() => navigation.navigate("OutcomesDetails", {
+                            outlineId: outline.id
                         })} />
                     <DetailsButton label="Học liệu"
-                        onPress={() => navigation.navigate("MaterialDetails", {
-                            outlineId: outline.id,
-                            existed: outline.materials && outline.materials.length > 0
+                        onPress={() => navigation.navigate("MaterialsDetails", {
+                            outlineId: outline.id
                         })} />
                     <DetailsButton label="Đánh giá môn học"
-                        onPress={() => navigation.navigate("EvaluationDetails", {
-                            outlineId: outline.id,
-                            existed: outline.evaluations && outline.evaluations.length > 0
+                        onPress={() => navigation.navigate("EvaluationsDetails", {
+                            outlineId: outline.id
                         })} />
                     <DetailsButton label="Kế hoạch giảng dạy"
-                        onPress={() => navigation.navigate("ScheduleDetails", {
-                            outlineId: outline.id,
-                            existed: outline.schedule_weeks && outline.schedule_weeks.length > 0
+                        onPress={() => navigation.navigate("ScheduleWeeksDetails", {
+                            outlineId: outline.id
                         })} />
 
                     <TextInput

@@ -17,10 +17,12 @@ import {
 import {
     Compiler,
     EvaluationCard, EvaluationDetails,
+    MaterialCard, MaterialDetails,
     MyWork, MyWorkDetails,
     ObjectiveCard, ObjectiveDetails,
-    OutcomeDetails,
-    RequirementDetails
+    OutcomeCard, OutcomeDetails,
+    RequirementDetails,
+    ScheduleCard, ScheduleDetails
 } from './screens/my_work';
 import {
     Profile
@@ -84,7 +86,7 @@ export const WorkStack = () => {
                     title: "Điều kiện",
                     headerLeft: backButton
                 }} />
-            <Stack.Screen name="ObjectiveDetails" component={ObjectiveDetails}
+            <Stack.Screen name="ObjectivesDetails" component={ObjectiveDetails}
                 options={{
                     title: "Các mục tiêu"
                 }} />
@@ -92,21 +94,37 @@ export const WorkStack = () => {
                 options={{
                     title: "Mục tiêu"
                 }} />
-            <Stack.Screen name="OutcomeDetails" component={OutcomeDetails}
+            <Stack.Screen name="OutcomesDetails" component={OutcomeDetails}
                 options={{
                     title: "Các chuẩn đầu ra"
                 }} />
-            {/* <Stack.Screen name="EvaluationCard" component={EvaluationCard}
+            <Stack.Screen name="OutcomeCard" component={OutcomeCard}
                 options={{
-                    title: "Đánh giá"
-                }} /> */}
-            <Stack.Screen name="EvaluationDetails" component={EvaluationDetails}
+                    title: "Chuẩn đầu ra"
+                }} />
+            <Stack.Screen name="MaterialsDetails" component={MaterialDetails}
+                options={{
+                    title: "Các học liệu"
+                }} />
+            <Stack.Screen name="MaterialCard" component={MaterialCard}
+                options={{
+                    title: "Học liệu"
+                }} />
+            <Stack.Screen name="EvaluationsDetails" component={EvaluationDetails}
                 options={{
                     title: "Các đánh giá"
                 }} />
             <Stack.Screen name="EvaluationCard" component={EvaluationCard}
                 options={{
                     title: "Đánh giá"
+                }} />
+            <Stack.Screen name="ScheduleWeeksDetails" component={ScheduleDetails}
+                options={{
+                    title: "Các kế hoạch giảng dạy"
+                }} />
+            <Stack.Screen name="ScheduleWeekCard" component={ScheduleCard}
+                options={{
+                    title: "Kế hoạch giảng dạy"
                 }} />
         </Stack.Navigator>
     )

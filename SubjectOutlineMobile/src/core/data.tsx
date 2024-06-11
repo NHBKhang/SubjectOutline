@@ -36,3 +36,14 @@ export const evaluationType = [{
     'value': '3',
     'label': 'Đánh giá cuối kỳ'
 }];
+
+export const materialType = [{
+    'value': '1',
+    'label': 'Tài liệu'
+}, {
+    'value': '2',
+    'label': 'ss'
+}, {
+    'value': '3',
+    'label': 'Phần mềm'
+}];

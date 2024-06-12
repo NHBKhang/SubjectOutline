@@ -16,8 +16,8 @@ const FirebaseAuth = (idToken) => {
 
 const endpoints = {
     'messages': `/messages/`,
-    'messages-by-user': (userId) => `/messages/user${userId}.json`,
-    'messages-by-users': (userId, toUserId) => `/messages/user${userId}/user${toUserId}.json`,
+    'messages-by-user': (username) => `/messages/${username}.json`,
+    'messages-by-users': (username, receiverUsername) => `/messages/${username}/${receiverUsername}.json`,
 }
 
 export const signInWithEmailAndPassword = async (email, password) => {
@@ -42,31 +42,32 @@ export const signInWithEmailAndPassword = async (email, password) => {
 export const getAllMessages = async (user) => {
     try {
         let idToken = await signInWithEmailAndPassword(user.email, "123456");
-        let res = await FirebaseAuth(idToken).get(endpoints["messages-by-user"](user.id));
+        let res = await FirebaseAuth(idToken).get(
+            endpoints["messages-by-user"](user.username));
 
         const array = [];
         await (async () => {
-            for (const [user, messages] of Object.entries(res.data)) {
+            for (const [receiver, messages] of Object.entries(res.data)) {
                 const messageKeys = Object.keys(messages);
-                const userData = await API.get(restEndpoints.user(user.replace(/\D/g, '')));
+                const userData = await API.get(restEndpoints["user-by-username"](receiver));
                 if (messageKeys.length > 0) {
-                    const lastMessageKey = messageKeys[messageKeys.length - 1];
-                    const lastMessage = messages[lastMessageKey];
+                    const lastMessage = messages[messageKeys[0]];
                     const toUser = userData.data;
                     array.push({
                         user: {
                             id: toUser.id,
                             avatar: toUser.avatar,
                             name: toUser.name,
+                            username: toUser.username
                         },
                         content: lastMessage.content,
-                        created_date: lastMessage.created_date,
+                        timestamp: lastMessage.timestamp,
                         sender: lastMessage.sender,
                     });
                 }
             }
         })();
-        array.sort((a, b) => new Date(a.created_date) - new Date(b.created_date));
+        array.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 
         return array;
     } catch (error) {
@@ -74,35 +75,35 @@ export const getAllMessages = async (user) => {
     }
 };
 
-export const getMessages = async (user, toUserId) => {
+export const getMessages = async (user, receiverUser) => {
     try {
         let idToken = await signInWithEmailAndPassword(user.email, "123456");
-        let res1 = await FirebaseAuth(idToken).get(endpoints["messages-by-users"](user.id, toUserId));
-        let res2 = await FirebaseAuth(idToken).get(endpoints["messages-by-users"](toUserId, user.id));
+        let res = await FirebaseAuth(idToken).get(endpoints["messages-by-users"](user.username, receiverUser.username));
 
-        const values1 = Object.values(res1.data);
-        const values2 = Object.values(res2.data);
-        const mergedArray = [...values1, ...values2];
-        mergedArray.sort((a, b) => new Date(a.created_date) - new Date(b.created_date));
+        const array = [...Object.values(res.data)];
+        array.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 
-        return mergedArray;
+        return array;
     } catch (error) {
         throw error;
     }
 };
 
-export const addMessage = async (user, content) => {
+export const addMessage = async (user, receiverUser, content) => {
     try {
         let idToken = await signInWithEmailAndPassword(user.email, "123456");
-        const form = new FormData();
-        form.append('content', content);
+        const data = {
+            sender: user.id,
+            content: content,
+            timestamp: Date.now()
+        };
 
-        await FirebaseAuth(idToken).post(endpoints["messages-by-user"](user.id),
-            form, {
-            headers: {
-                "Content-Type": "multipart/form-data"
-            }
-        });
+        await FirebaseAuth(idToken).post(
+            endpoints["messages-by-users"](user.username, receiverUser.username), data);
+        let res = await FirebaseAuth(idToken).post(
+            endpoints["messages-by-users"](receiverUser.username, user.username), data);
+
+        return res;
     } catch (error) {
         throw error;
     }

@@ -8,6 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 import json
 
 
@@ -151,11 +152,22 @@ class UserViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.Retriev
 
         return Response(serializer.data)
 
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = serializers.PublicUserSerializer(instance)
+    def retrieve(self, request, pk=None, username=None):
+        if pk:
+            queryset = self.get_queryset()
+            user = get_object_or_404(queryset, pk=pk)
+        elif username:
+            queryset = self.get_queryset()
+            user = get_object_or_404(queryset, username=username)
+        else:
+            return Response({"detail": "Not found."}, status=404)
+        serializer = self.get_serializer(user)
 
         return Response(serializer.data)
+
+    @action(detail=False, methods=['get'], url_path='by-username/(?P<username>[^/.]+)')
+    def retrieve_by_username(self, request, username=None):
+        return self.retrieve(request, username=username)
 
 
 class InactiveUserViewSet(viewsets.ViewSet, generics.RetrieveUpdateDestroyAPIView):

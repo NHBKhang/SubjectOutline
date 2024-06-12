@@ -11,7 +11,7 @@ import { format, isSameDay } from "date-fns";
 import MessageContentCard from "../../components/cards/MessageContentCard";
 
 const MessageRoom = ({ route }) => {
-    const toUserId = route.params?.userId;
+    const receiverUser = route.params?.user;
     const [toUser, setToUser] = useState(null);
     const [content, setContent] = useState('');
     const [messages, setMessages] = useState(null);
@@ -20,7 +20,7 @@ const MessageRoom = ({ route }) => {
     useEffect(() => {
         const loadUser = async () => {
             try {
-                let res = await API.get(endpoints.user(toUserId));
+                let res = await API.get(endpoints.user(receiverUser.id));
                 setToUser(res.data);
             } catch (ex) {
                 console.error(ex);
@@ -30,20 +30,29 @@ const MessageRoom = ({ route }) => {
 
         const loadMessages = async () => {
             try {
-                setMessages(await getMessages(user, toUserId));
+                setMessages(await getMessages(user, receiverUser));
             } catch (ex) {
                 setMessages([]);
                 console.error(ex);
             }
         }
         loadMessages();
-    }, [toUserId]);
+    }, [receiverUser]);
 
     const sendMessage = async (content) => {
         try {
-            let res = await addMessage(user, content);
+            let res = await addMessage(user, receiverUser, content);
 
-            console.log(res.data);
+            if (res.data) {
+                setMessages(prevMessages => [
+                    ...prevMessages,
+                    {
+                        sender: user.id,
+                        content: content,
+                        timestamp: Date.now()
+                    }
+                ]);
+            }
         } catch (ex) {
             console.error(ex);
             Alert.alert("Failed", "Gửi tin nhắn thất bại!");
@@ -62,18 +71,18 @@ const MessageRoom = ({ route }) => {
                 <ScrollView style={{ width: '100%', position: 'absolute', bottom: 75 }}>
                     {messages ? <View style={gStyles.chat}>
                         {messages.map((m, index) => <View key={index}>
-                            {(index === 0 || timeDifference(new Date(messages[index - 1].created_date), new Date(m.created_date)) > 30) &&
+                            {(index === 0 || timeDifference(new Date(messages[index - 1].timestamp), new Date(m.timestamp)) > 30) &&
                                 <Text style={styles.timeText}>
-                                    {(index !== 0 && isSameDay(new Date(messages[index - 1].created_date), new Date(m.created_date)))
-                                        ? format(new Date(m.created_date), 'HH:mm')
-                                        : format(new Date(m.created_date), 'dd/MM/yyyy HH:mm')}
+                                    {(index !== 0 && isSameDay(new Date(messages[index - 1].timestamp), new Date(m.timestamp)))
+                                        ? format(new Date(m.timestamp), 'HH:mm')
+                                        : format(new Date(m.timestamp), 'dd/MM/yyyy HH:mm')}
                                 </Text>
                             }
                             <MessageContentCard
                                 user={m.sender == user.id ? user : toUser}
                                 isSender={m.sender == user.id}
                                 content={m.content}
-                                created_date={m.created_date} />
+                                created_date={m.timestamp} />
                         </View>)}
                     </View> : <ActivityIndicator />}
                 </ScrollView>
@@ -99,7 +108,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        zIndex: 1000
     },
     text: {
         fontSize: 18,

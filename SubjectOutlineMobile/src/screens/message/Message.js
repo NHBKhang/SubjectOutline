@@ -44,8 +44,8 @@ const Message = ({ navigation }) => {
     loadMessages();
   }, []);
 
-  const chooseRoom = (userId) => {
-    navigation.navigate("MessageRoom", { "userId": userId });
+  const chooseRoom = (user) => {
+    navigation.navigate("MessageRoom", { "user": user });
   };
 
   return (
@@ -77,8 +77,8 @@ const Message = ({ navigation }) => {
           {messages.map((m, index) => <View key={index}>
             <MessageCard
               content={m.content}
-              createdDate={m.created_date}
-              onPress={() => chooseRoom(m.user.id)}
+              createdDate={m.timestamp}
+              onPress={() => chooseRoom(m.user)}
               user={m.user} /></View>
           )}
         </View> : <View style={[gStyles.container, { justifyContent: 'center' }]}>

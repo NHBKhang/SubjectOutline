@@ -13,7 +13,7 @@ type Props = {
 
 const MessageContentCard = ({ user, isSender, content, createdDate }: Props) => {
     return (
-        <View style={gStyles.w100}>
+        <View style={[gStyles.w100, {marginVertical: 5}]}>
             <View style={isSender && styles.right}>
                 <View style={styles.content}>
                     {isSender && <ContentBox content={content} isSender={isSender} />}

@@ -1,16 +1,32 @@
 {
     "messages": {
-        "message1": {
-            "sender": "khang",
-            "receiver": "admin",
-            "timestamp": 1625247600000,
-            "text": "Hello, how are you?"
+        "khang": {
+            "admin": {
+                "message1": {
+                    "sender": 2,
+                    "timestamp": 1625247660000,
+                    "content": "I'm fine, thanks!"
+                },
+                "message2": {
+                    "sender": 1,
+                    "timestamp": 1625247600000,
+                    "content": "Hello, how are you?"
+                }
+            }
         },
-        "message2": {
-            "sender": "admin",
-            "receiver": "khang",
-            "timestamp": 1625247660000,
-            "text": "I'm fine, thanks!"
+        "admin": {
+            "khang": {
+                "message1": {
+                    "sender": 2,
+                    "timestamp": 1625247660000,
+                    "content": "I'm fine, thanks!"
+                },
+                "message2": {
+                    "sender": 1,
+                    "timestamp": 1625247600000,
+                    "content": "Hello, how are you?"
+                }
+            }
         }
     }
 }

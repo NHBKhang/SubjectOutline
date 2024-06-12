@@ -16,6 +16,7 @@ export const endpoints = {
     'user-requests': '/temp/user-requests/',
     'users': '/users/',
     'user': (userId) => `/users/${userId}/`,
+    'user-by-username': (username) => `/users/by-username/${username}/`,
     'comments': (outlineId) => `/subject-outlines/${outlineId}/comments/`,
     'add-comment': (outlineId) => `/subject-outlines/${outlineId}/comment/`,
     'like': (outlineId) => `/subject-outlines/${outlineId}/like/`,

@@ -211,7 +211,7 @@ export const checkPassword = async (password) => {
 }
 
 export function getCurrentDate() {
-    const date = new Date();
+    const date = new Date(Date.now());
     return date.toISOString().split('T')[0];
 }
 

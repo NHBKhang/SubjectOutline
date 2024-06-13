@@ -79,14 +79,15 @@ const MyWorkDetails = ({ route, navigation }) => {
 
     const patchOutline = async () => {
         try {
-            console.info(outline.years)
+            let form = new FormData();
+            for (let key in outline)
+                if (key != 'requirement')
+                    form.append(key, outline[key]);
             let token = await AsyncStorage.getItem("access-token");
-            let res = await authApi(token).patch(
-                `${endpoints["outline-details"](outlineId)}`,
-                outline, {
+            let res = await authApi(token).patch(endpoints["outline-details"](outlineId),
+                form, {
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Content-Type': 'multipart/form-data'
                 }
             });
             setOutline(res.data);
@@ -94,7 +95,8 @@ const MyWorkDetails = ({ route, navigation }) => {
                 [
                     {
                         text: 'Thoát',
-                        style: 'cancel'
+                        style: 'cancel',
+                        onPress: () => navigation.goBack()
                     },
                     { cancelable: false }
                 ]);
@@ -105,9 +107,7 @@ const MyWorkDetails = ({ route, navigation }) => {
     };
 
     const updateDropDown = (field, value) => {
-        setShowDropDown(current => {
-            return { ...current, [field]: value }
-        })
+        setShowDropDown(current => ({ ...current, [field]: value }))
     };
 
     return (
@@ -133,13 +133,8 @@ const MyWorkDetails = ({ route, navigation }) => {
                         showDropDown={() => updateDropDown('years', true)}
                         onDismiss={() => updateDropDown('years', false)}
                         value={outline.years?.toString()}
-                        setValue={v => {
-                            let arr = dropdownValue(v);
-                            if (arr.length <= 2)
-                                updateOutline("years", arr);
-                        }}
-                        list={years}
-                        multiSelect />
+                        setValue={v => updateOutline("years", Number(v))}
+                        list={years}/>
                     {/* <View style={[gStyles.row]}>
                         <View style={{ width: '85%' }}> */}
                     <Dropdown

@@ -124,7 +124,7 @@ class Course(BaseModel, ImageBaseModel):
 
 
 class SchoolYear(models.Model):
-    year = models.IntegerField(null=True, unique=True)
+    year = models.CharField(max_length=10, null=True, unique=True)
 
     def __str__(self):
         return f"{self.year}"
@@ -132,10 +132,11 @@ class SchoolYear(models.Model):
 
 class SubjectOutline(BaseModel):
     title = models.CharField(max_length=50, null=True)
-    years = models.ManyToManyField(SchoolYear, related_name='subject_outlines')
+    years = models.ForeignKey(SchoolYear, related_name='subject_outlines', on_delete=models.CASCADE, null=True,
+                              blank=True, default=1)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='subject_outlines', null=True)
-    instructor = models.OneToOneField(Instructor, on_delete=models.CASCADE, null=True,
-                                      related_query_name='subject_outline')
+    instructor = models.ForeignKey(Instructor, on_delete=models.CASCADE, null=True,
+                                   related_name='subject_outlines')
     rule = models.TextField(null=True)
 
     def __str__(self):

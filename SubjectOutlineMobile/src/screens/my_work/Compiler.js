@@ -5,25 +5,27 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import API, { authApi, endpoints } from "../../configs/API";
 import { doneButton, TextInput, H1, Dropdown } from "../../components";
 import CourseModal from "../../components/modals/CourseModal";
-import { isNullOrEmpty, outlineTranslator, stringValidator } from "../../core/utils";
+import { dropdownValue, isNullOrEmpty, outlineTranslator, stringValidator } from "../../core/utils";
 import Context from "../../configs/Context";
+import { ScrollView } from "react-native-gesture-handler";
 
 const Compiler = ({ navigation }) => {
     const [user,] = useContext(Context);
     const [outline, setOutline] = useState({
         "title": '',
-        "year": '',
+        "years": '',
         "course": '',
         "rule": ''
     });
     const [outlineError, setOutlineError] = useState({
         "title": '',
-        "year": '',
+        "years": '',
         "course": '',
         "rule": ''
     });
-    const [courses, setCourses] = useState(null);
-    const [showDropDown, setShowDropDown] = useState(false);
+    const [courses, setCourses] = useState([]);
+    const [years, setYears] = useState([]);
+    const [showDropDown, setShowDropDown] = useState(null);
 
     const updateOutline = (field, value) => {
         setOutline(current => {
@@ -40,12 +42,24 @@ const Compiler = ({ navigation }) => {
                 let res = await API.get(endpoints.courses);
                 setCourses(res.data.results);
             } catch (ex) {
-                setCourses([]);
                 console.error(ex);
             }
         }
+        const loadYears = async () => {
+            try {
+                let res = await API.get(endpoints.years);
+                let data = await res.data.map(c => ({
+                    label: `${c.year}`,
+                    value: `${c.id}`
+                }));
+                setYears(data);
+            } catch (ex) {
+                console.error(ex);
+            }
+        };
 
         loadCourses();
+        loadYears();
     }, []);
 
     const addOutline = async () => {
@@ -67,17 +81,18 @@ const Compiler = ({ navigation }) => {
 
             outline['instructor'] = user.id;
 
+            console.log(outline);
+
             let token = await AsyncStorage.getItem("access-token");
-            await authApi(token).post(
-                `${endpoints["subject-outlines"]}`,
+            let res = await authApi(token).post(endpoints["subject-outlines"],
                 outline, {
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Content-Type': 'application/json'
                 }
             });
+            console.info(res.data);
 
-            await Alert.alert("Thêm", "Thêm đề cương mới thành công");
+            Alert.alert("Thêm", "Thêm đề cương mới thành công");
             navigation.goBack();
         } catch (ex) {
             if (ex.message === "Empty") {
@@ -94,48 +109,56 @@ const Compiler = ({ navigation }) => {
         headerRight: () => doneButton(addOutline)
     });
 
+    const updateDropDown = (field, value) => {
+        setShowDropDown(current => ({ ...current, [field]: value }))
+    };
+
     return (
         <View style={gStyles.container}>
-            <H1>BIÊN SOẠN ĐỀ CƯƠNG MỚI</H1>
-            <TextInput
-                label="Nhập tên đề cương"
-                value={outline.title}
-                onChangeText={t => updateOutline("title", t)}
-                error={isNullOrEmpty(outline.title)}
-                errorText={outlineError.title} />
-            <TextInput
-                label="Niên khóa"
-                value={outline.year}
-                onChangeText={t => updateOutline("year", t)}
-                keyboardType="numeric"
-                maxLength={4}
-                error={isNullOrEmpty(outline.year)}
-                errorText={outlineError.year} />
-            <View style={[gStyles.row]}>
-                {/* <View style={{ width: '85%' }}> */}
+            <ScrollView>
+                <H1>BIÊN SOẠN ĐỀ CƯƠNG MỚI</H1>
+                <TextInput
+                    label="Nhập tên đề cương"
+                    value={outline.title}
+                    onChangeText={t => updateOutline("title", t)}
+                    error={isNullOrEmpty(outline.title)}
+                    errorText={outlineError.title} />
                 <Dropdown
-                    label='Môn học'
+                    label="Niên khóa"
                     mode='outlined'
-                    visible={showDropDown}
-                    showDropDown={() => setShowDropDown(true)}
-                    onDismiss={() => setShowDropDown(false)}
-                    value={outline.course.toString()}
-                    setValue={v => updateOutline("course", v)}
-                    list={courses ? courses.map(c => ({
-                        label: `${c.name}`,
-                        value: `${c.id}`
-                    })) : []} />
-                {/* </View>
+                    visible={showDropDown?.year}
+                    showDropDown={() => updateDropDown('year', true)}
+                    onDismiss={() => updateDropDown('year', false)}
+                    value={outline.years?.toString()}
+                    setValue={v => updateOutline("years", Number(v))}
+                    list={years} />
+                <View style={[gStyles.row]}>
+                    {/* <View style={{ width: '85%' }}> */}
+                    <Dropdown
+                        label='Môn học'
+                        mode='outlined'
+                        visible={showDropDown?.course}
+                        showDropDown={() => updateDropDown('course', true)}
+                        onDismiss={() => updateDropDown('course', false)}
+                        value={outline.course?.toString()}
+                        setValue={v => updateOutline("course", Number(v))}
+                        list={courses ? courses.map(c => ({
+                            label: `${c.name}`,
+                            value: `${c.id}`
+                        })) : []} />
+                    {/* </View>
                 <View style={{ width: '12%', marginStart: '3%', marginTop: 24 }}>
                     <CourseModal />
                 </View> */}
-            </View>
-            <TextInput
-                label="Quy định môn học"
-                value={outline.rule}
-                onChangeText={t => updateOutline("rule", t)}
-                error={isNullOrEmpty(outline.rule)}
-                errorText={outlineError.rule} />
+                </View>
+                <TextInput
+                    label="Quy định môn học"
+                    value={outline.rule}
+                    onChangeText={t => updateOutline("rule", t)}
+                    error={isNullOrEmpty(outline.rule)}
+                    errorText={outlineError.rule}
+                    multiline />
+            </ScrollView>
         </View>
     )
 }

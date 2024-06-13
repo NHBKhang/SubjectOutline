@@ -250,11 +250,7 @@ class SubjectOutlineSerializer(serializers.ModelSerializer):
     schedule_weeks = ScheduleWeekListSerializer(many=True)
 
     def get_years(self, outline):
-        year = ''
-        for y in outline.years.order_by('year').all():
-            year += f'{y}, '
-
-        return year.rstrip(', ')
+        return outline.years.year
 
     def get_like_count(self, outline):
         return Like.objects.filter(outline=outline).filter(active=True).count()
@@ -286,9 +282,8 @@ class AuthenticatedSubjectOutlineSerializer(SubjectOutlineSerializer):
 
 class ModifySubjectOutlineSerializer(serializers.ModelSerializer):
     class Meta:
-        model = SubjectOutline
-        fields = ['id', 'title', 'years', 'course', 'rule', 'requirement', 'objectives', 'evaluations', 'materials',
-                  'schedule_weeks']
+        model = CreateSubjectOutlineSerializer.Meta.model
+        fields = ['title', 'course', 'years', 'rule', 'instructor', 'id', 'requirement']
 
 
 class PublicUserSerializer(serializers.ModelSerializer):

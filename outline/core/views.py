@@ -27,7 +27,7 @@ class CourseViewSet(viewsets.ViewSet, generics.ListAPIView):
 
 
 class SubjectOutlineViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.RetrieveUpdateAPIView):
-    queryset = SubjectOutline.objects.all()
+    queryset = SubjectOutline.objects.filter(active=True).all()
     pagination_class = paginators.SubjectOutlinePaginator
 
     def get_queryset(self):
@@ -50,8 +50,7 @@ class SubjectOutlineViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generi
 
     def get_serializer_class(self):
         if self.request.user.is_authenticated:
-            if (self.action in ['create', 'partial_update', 'update', ] or
-                    self.request.query_params.get('raw')):
+            if self.action in ['partial_update', 'update', 'create'] or self.request.query_params.get('raw'):
                 return serializers.ModifySubjectOutlineSerializer
             else:
                 return serializers.AuthenticatedSubjectOutlineSerializer

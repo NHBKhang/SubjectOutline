@@ -181,13 +181,13 @@ export const timeDifference = (date1, date2) => {
 };
 
 export const isNullOrEmpty = (str) => {
-    return str == null || str.trim() === '';
+    return str == null || str.toString().trim() === '';
 };
 
 export const outlineTranslator = (label) => {
     if (label === 'title')
         return 'Tên đề cương';
-    else if (label === 'year')
+    else if (label === 'years')
         return 'Niên khóa';
     else if (label === 'course')
         return '';

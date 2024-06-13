@@ -56,13 +56,4 @@ class EvaluationForm(forms.ModelForm):
 class SubjectOutlineForm(forms.ModelForm):
     class Meta:
         model = SubjectOutline
-        exclude = '__all__'
-
-    def clean(self):
-        cleaned_data = super().clean()
-
-        years = cleaned_data.get('years', None)
-        if years.count() > 2:
-            raise ValidationError('A subject outline can only be used for less than 2 school years.')
-
-        return self.cleaned_data
+        fields = '__all__'

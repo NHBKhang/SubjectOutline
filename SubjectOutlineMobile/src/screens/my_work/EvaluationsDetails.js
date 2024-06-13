@@ -50,7 +50,17 @@ const EvaluationDetails = ({ navigation, route }) => {
     navigation.setOptions({
         headerLeft: () => backButton(() => {
             if (totalWeight != 1) {
-                Alert.alert("CC");
+                Alert.alert("Thoát", "Tổng tỉ lệ khác bằng 1. Bạn chắc chắn muốn thoát?", [
+                    {
+                        text: 'Không',
+                        onPress: () => { return; }
+                    },
+                    {
+                        text: 'Có',
+                        onPress: () => navigation.goBack()
+                    },
+                    { cancelable: false }
+                ]);
             }
         })
     });

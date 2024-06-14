@@ -1,30 +1,35 @@
 import React, { memo, useState } from 'react';
 import { StyleSheet, ScrollView, View, Alert } from 'react-native';
 import { theme } from '../../core/theme';
-import { emailValidator } from '../../core/utils';
 import { gStyles } from '../../core/global';
 import Mailgun, { endpoints } from '../../configs/Mailgun';
 import { Button, H1, Logo, TextInput } from '../../components';
+import { isNullOrEmpty, usernameValidator } from '../../core/utils';
 
 const ForgotPassword = ({ navigation }) => {
-  const [email, setEmail] = useState({ value: '', error: '' });
+  const [username, setUsername] = useState({ value: '', error: null });
 
   const onSendPressed = async () => {
-    const emailError = emailValidator(email.value);
+    const usernameError = usernameValidator(username.value);
 
-    if (emailError) {
-      setEmail({ ...email, error: emailError });
-      return;
-    }
+    if (isNullOrEmpty(username.value)) {
+      setUsername({ ...username, error: usernameError });
+    } else {
+      try {
+        let res = await Mailgun.post(endpoints['recovery-password'],
+          { username: username }, {
+            headers: {
+              "Content-Type": "application/json"
+            }
+        }
+        );
 
-    try {
-      let res = await Mailgun.post(endpoints['recovery-password']);
-
-      Alert.alert("Done", "Yêu cầu đã được gửi thành công!");
-      navigation.navigate('Login');
-    } catch (ex) {
-      console.error(ex);
-      Alert.alert("Error", "Yêu cầu gửi thất bại!");
+        Alert.alert("Done", "Yêu cầu đã được gửi thành công!");
+        navigation.navigate('Login');
+      } catch (ex) {
+        console.error(ex);
+        Alert.alert("Error", "Yêu cầu gửi thất bại!");
+      }
     }
   };
 
@@ -36,16 +41,13 @@ const ForgotPassword = ({ navigation }) => {
         <H1>Khôi phục mật khẩu</H1>
 
         <TextInput
-          label="Địa chỉ email"
+          label="Tên tài khoản"
           returnKeyType="done"
-          value={email.value}
-          onChangeText={text => setEmail({ value: text, error: '' })}
-          error={!!email.error}
-          errorText={email.error}
-          autoCapitalize="none"
-          autoCompleteType="email"
-          textContentType="emailAddress"
-          keyboardType="email-address" />
+          value={username.value}
+          onChangeText={text => setUsername({ value: text, error: null })}
+          error={!!username.error}
+          errorText={username.error}
+          autoCapitalize="none" />
 
         <Button mode="contained" onPress={onSendPressed} style={styles.button}>
           Gửi yêu cầu

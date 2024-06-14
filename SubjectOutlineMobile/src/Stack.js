@@ -1,6 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
-import { addButton, backButton } from './components';
+import { addButton, backButton, doneButton, editButton } from './components';
 import {
     Login,
     Register,
@@ -36,6 +36,12 @@ import {
     StudentInfo,
     InstructorInfo
 } from './screens/intro';
+import Context from './configs/Context';
+import { useContext, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { authApi, endpoints } from './configs/API';
+import { toMyDate, toServerDate } from './core/utils';
+import { Alert } from 'react-native';
 
 const Stack = createStackNavigator();
 
@@ -145,23 +151,70 @@ export const MessageStack = () => (
     </Stack.Navigator>
 )
 
-export const ProfileStack = ({ editMode, user, setUser, ...props }) => (
-    <Stack.Navigator>
-        <Stack.Screen name="Profile"
-            options={{
-                title: "Hồ sơ",
-            }}>
-            {() => (
-                <Profile
-                    editMode={editMode}
-                    user={user}
-                    setUser={setUser}
-                    {...props}
-                />
-            )}
-        </Stack.Screen>
-    </Stack.Navigator>
-)
+export const ProfileStack = () => {
+    const [user, dispatch] = useContext(Context);
+    const [tempUser, setTempUser] = useState(user);
+    const [editMode, setEditMode] = useState(false);
+
+    const updateUser = async () => {
+        if (user === tempUser) {
+            setEditMode(false);
+            return;
+        }
+
+        const form = new FormData();
+        form.append('first_name', tempUser.first_name);
+        form.append('last_name', tempUser.last_name);
+        form.append('email', tempUser.email);
+        form.append('phone', tempUser.phone);
+        form.append('birthday', toServerDate(tempUser.birthday));
+        
+        try {
+            let token = await AsyncStorage.getItem("access-token");
+            let res = await authApi(token).patch(endpoints["current-user"],
+                form, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            res.data.birthday = toMyDate(res.data.birthday);
+            dispatch({
+                type: "login",
+                payload: res.data
+            });
+
+            Alert.alert("Updated", "Cập nhật thành công.");
+            setEditMode(false);
+        } catch (ex) {
+            console.error(ex);
+            Alert.alert("Failed", "Cập nhật thất bại.");
+        }
+    };
+    return (
+        <Stack.Navigator>
+            <Stack.Screen name="Profile"
+                options={{
+                    title: "Hồ sơ",
+                    headerLeft: () => editMode ?
+                        backButton(() => {
+                            setEditMode(false);
+                            setTempUser(user);
+                        }, false) : null,
+                    headerRight: () => editMode ?
+                        doneButton(updateUser) :
+                        editButton(() => setEditMode(true))
+                }}>
+                {props => (
+                    <Profile {...props}
+                        editMode={editMode}
+                        user={tempUser}
+                        setUser={setTempUser}
+                    />
+                )}
+            </Stack.Screen>
+        </Stack.Navigator>
+    )
+}
 
 export const SettingsStack = () => (
     <Stack.Navigator>

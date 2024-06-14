@@ -21,7 +21,7 @@ class UserRequestViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.
             user, password = (core_dao.
                               create_student_user(instance.username, instance.email, instance.last_name,
                                                   instance.first_name))
-
+            print(password)
             dao.delete_user_request(instance.id)
             data = core_serializers.UserSerializer(user).data
             context = {
@@ -36,3 +36,8 @@ class UserRequestViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.
         except Exception as e:
             print(e)
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class RecoveryRequestViewSet(viewsets.ModelViewSet, generics.CreateAPIView):
+    queryset = RecoveryRequest.objects.all()
+    serializer_class = serializers.RecoveryRequestSerializer

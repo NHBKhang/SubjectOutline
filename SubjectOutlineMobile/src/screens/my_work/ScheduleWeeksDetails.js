@@ -34,21 +34,23 @@ const OutcomeDetails = ({ route, navigation }) => {
 
     return (
         <View style={gStyles.container}>
-            <H1>Kế hoạch giảng dạy</H1>
-            {scheduleWeeks === null ? <ActivityIndicator /> : <View>
-                {scheduleWeeks.map((w, index) => <View key={index}>
-                    <Schedule
-                        instance={w}
-                        navigation={navigation}
-                        callback={() => setCallback(!callback)} />
-                </View>)}
-                <View key={0}>
-                    <Schedule
-                        instance={{ outline: outlineId }}
-                        navigation={navigation}
-                        callback={() => setCallback(!callback)} />
-                </View>
-            </View>}
+            <ScrollView style={gStyles.w100}>
+                <H1>Kế hoạch giảng dạy</H1>
+                {scheduleWeeks === null ? <ActivityIndicator /> : <View>
+                    {scheduleWeeks.map((w, index) => <View key={index}>
+                        <Schedule
+                            instance={w}
+                            navigation={navigation}
+                            callback={() => setCallback(!callback)} />
+                    </View>)}
+                    <View key={0}>
+                        <Schedule
+                            instance={{ outline: outlineId }}
+                            navigation={navigation}
+                            callback={() => setCallback(!callback)} />
+                    </View>
+                </View>}
+            </ScrollView>
         </View>
     )
 }

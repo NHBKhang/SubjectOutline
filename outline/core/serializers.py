@@ -98,7 +98,7 @@ class MaterialListSerializer(serializers.ModelSerializer):
 class RequirementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Requirement
-        fields = ['prerequisites', 'preceding_courses', 'co_courses', 'id']
+        fields = ['prerequisites', 'preceding_courses', 'co_courses', 'id', 'outline']
 
 
 class RequirementListSerializer(serializers.ModelSerializer):
@@ -282,7 +282,7 @@ class AuthenticatedSubjectOutlineSerializer(SubjectOutlineSerializer):
 
 class ModifySubjectOutlineSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CreateSubjectOutlineSerializer.Meta.model
+        model = SubjectOutline
         fields = ['title', 'course', 'years', 'rule', 'instructor', 'id', 'requirement']
 
 
@@ -314,7 +314,7 @@ class PublicUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'name', 'avatar', 'instructor', 'is_active']
+        fields = ['id', 'name', 'avatar', 'instructor', 'is_active', 'username']
 
 
 class UserSerializer(PublicUserSerializer):
@@ -330,7 +330,7 @@ class UserSerializer(PublicUserSerializer):
     class Meta:
         model = PublicUserSerializer.Meta.model
         fields = (PublicUserSerializer.Meta.fields +
-                  ['first_name', 'last_name', 'username', 'email', 'password', 'phone', 'birthday', 'is_staff',
+                  ['first_name', 'last_name', 'email', 'password', 'phone', 'birthday', 'is_staff',
                    'last_login'])
         extra_kwargs = {
             'password': {

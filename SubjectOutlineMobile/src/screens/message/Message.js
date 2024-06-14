@@ -61,7 +61,7 @@ const Message = ({ navigation }) => {
       {show && (<ScrollView style={[styles.searchContainer,
       users && users.length <= 1 && styles.default]}>
         {users ? users.map(u =>
-          <TouchableHighlight key={u.id} onPress={() => chooseRoom(u.id)}>
+          <TouchableHighlight key={u.id} onPress={() => chooseRoom(u)}>
             <View style={[gStyles.row, styles.userBox]}>
               <Avatar src={u.avatar} size={60} />
               <Text style={styles.username}>{u.name}</Text>

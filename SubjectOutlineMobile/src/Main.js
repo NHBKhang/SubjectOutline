@@ -1,11 +1,6 @@
-import Context from "./configs/Context";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { memo, useContext, useState } from "react";
-import { Alert, StyleSheet } from "react-native";
-import { authApi, endpoints } from "./configs/API";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { toMyDate, toServerDate } from "./core/utils";
+import { memo, useContext } from "react";
 import {
     HomeStack,
     MessageStack,
@@ -13,57 +8,13 @@ import {
     SettingsStack,
     ProfileStack
 } from "./Stack";
-import { backButton, doneButton, editButton } from "./components";
+import Context from "./configs/Context";
 
 const Tab = createBottomTabNavigator();
 
 const Main = () => {
-    const [user, dispatch] = useContext(Context);
-    const [tempUser, setTempUser] = useState(user);
-    const [editMode, setEditMode] = useState(false);
-
-    const updateUser = async () => {
-        if (user === tempUser) {
-            setEditMode(false);
-            return;
-        }
-
-        const form = new FormData();
-        for (let key in tempUser) {
-            if (key === 'avatar') continue;
-            else if (key === 'birthday') {
-                const str = await toServerDate(tempUser[key]);
-                form.append(key, str);
-            }
-            else if (key !== 'name' && key !== 'instructor')
-                form.append(key, tempUser[key]);
-        }
-
-        try {
-            let token = await AsyncStorage.getItem("access-token");
-            let res = await authApi(token).patch(endpoints["current-user"],
-                form, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            res.data.birthday = toMyDate(res.data.birthday);
-            dispatch({
-                type: "login",
-                payload: res.data
-            });
-
-            console.info(res.data);
-            await Alert.alert("Updated", "Cập nhật thành công.");
-
-            setEditMode(false);
-        } catch (ex) {
-            console.error(ex);
-            Alert.alert("Failed", "Cập nhật thất bại.");
-        }
-    };
-
+    const [user, ] = useContext(Context);
+    
     return (
         <Tab.Navigator screenOptions={{
             title: "Tab",
@@ -101,26 +52,13 @@ const Main = () => {
                             color={color} size={size} />)
                 }} />
 
-            <Tab.Screen name="ProfileStack"
+            <Tab.Screen name="ProfileStack" component={ProfileStack}
                 options={{
                     title: 'Hồ sơ',
                     headerShown: false,
-                    headerLeft: () => editMode ?
-                        backButton(() => {
-                            setEditMode(false);
-                            setTempUser(user);
-                        }, false) : null,
-                    headerRight: () => editMode ?
-                        doneButton(updateUser) :
-                        editButton(() => setEditMode(true)),
                     tabBarIcon: ({ color, size }) =>
                         <Icon name="user" color={color} size={size} />
-                }} >
-                {props => <ProfileStack {...props}
-                    editMode={editMode}
-                    user={tempUser}
-                    setUser={setTempUser} />}
-            </Tab.Screen>
+                }} />
 
             <Tab.Screen name="SettingsStack" component={SettingsStack}
                 options={{
@@ -134,12 +72,5 @@ const Main = () => {
         </Tab.Navigator>
     )
 }
-
-const styles = StyleSheet.create({
-    hBtn: {
-        fontSize: 16,
-        color: 'blue'
-    }
-});
 
 export default memo(Main);

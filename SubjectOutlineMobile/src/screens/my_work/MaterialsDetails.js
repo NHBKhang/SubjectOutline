@@ -43,9 +43,9 @@ const OutcomeDetails = ({ route, navigation }) => {
 
     return (
         <View style={gStyles.container}>
-            <ScrollView>
+            <ScrollView style={gStyles.w100}>
                 <H1>Chuẩn đầu ra môn học</H1>
-                {materials === null ? <ActivityIndicator /> : <View>
+                {materials === null ? <ActivityIndicator /> : <View style={gStyles.w100}>
                     {materials.map((m, index) => <View key={index}>
                         <Material
                             instance={m}
@@ -82,7 +82,8 @@ const Material = ({ instance, state, callback, navigation }) => {
                 Alert.alert("Error", "Xóa thất bại");
             }
         } else {
-            updateObjective('code', null);
+            updateMaterial('no', null);
+            updateMaterial('content', null);
         }
         setCount(count - 1);
     }

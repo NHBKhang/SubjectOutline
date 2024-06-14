@@ -28,13 +28,16 @@ const RequirementDetails = ({ navigation, route }) => {
                 let token = await AsyncStorage.getItem("access-token"), res = null;
                 if (requirementId)
                     res = await authApi(token).get(endpoints.requirement(requirementId));
-                else
+                else {
+                    const form = new FormData();
+                    form.append('outline', outlineId);
                     res = await authApi(token).post(endpoints.requirements,
-                        { outline: outlineId }, {
+                        form, {
                         headers: {
-                            "Content-Type": "application/json"
+                            "Content-Type": "multipart/form-data"
                         }
                     });
+                }
                 setRequirement(res.data);
             } catch (ex) {
                 console.error(ex);

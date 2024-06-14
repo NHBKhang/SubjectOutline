@@ -47,7 +47,7 @@ const OutcomeDetails = ({ route, navigation }) => {
 
     return (
         <View style={gStyles.container}>
-            <ScrollView>
+            <ScrollView style={gStyles.w100}>
                 <H1>Chuẩn đầu ra môn học</H1>
                 {outcomes === null ? <ActivityIndicator /> : <View>
                     {outcomes.map((o, index) => <View key={index}>

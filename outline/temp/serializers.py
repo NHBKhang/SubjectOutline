@@ -6,3 +6,9 @@ class UserRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserRequest
         fields = '__all__'
+
+
+class RecoveryRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RecoveryRequest
+        fields = '__all__'

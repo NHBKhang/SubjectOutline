@@ -12,3 +12,14 @@ class UserRequest(models.Model):
 
     def __str__(self):
         return self.username
+
+
+class RecoveryRequest(models.Model):
+    username = models.CharField(max_length=150)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'temp_recovery_request'
+
+    def __str__(self):
+        return f'{email}'

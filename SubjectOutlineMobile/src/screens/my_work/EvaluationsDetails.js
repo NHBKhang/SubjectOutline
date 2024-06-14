@@ -53,51 +53,54 @@ const EvaluationDetails = ({ navigation, route }) => {
                 Alert.alert("Thoát", "Tổng tỉ lệ khác bằng 1. Bạn chắc chắn muốn thoát?", [
                     {
                         text: 'Không',
+                        style: 'cancel',
                         onPress: () => { return; }
                     },
                     {
                         text: 'Có',
+                        style: 'default',
                         onPress: () => navigation.goBack()
-                    },
-                    { cancelable: false }
-                ]);
+                    }
+                ], { cancelable: false });
             }
-        })
+        }, false)
     });
 
     const weightStyle = totalWeight == 1 ? gStyles.textPrimary : gStyles.textError;
 
     return (
         <View style={gStyles.container}>
-            <H1>Đánh giá môn học</H1>
-            {evaluations === null ?
-                <ActivityIndicator /> : <View>
-                    {evaluations.map((e, index) => (
-                        <View key={index}>
-                            <Evaluation
-                                instance={e}
-                                navigation={navigation}
-                                callback={() => setCallback(!callback)}
-                                state={{ count, setCount }} />
-                        </View>
-                    ))}
-                    <View>
-                        {count <= 5 &&
-                            <Evaluation
-                                instance={{ outline: outlineId }}
-                                navigation={navigation}
-                                callback={() => setCallback(!callback)}
-                                state={{ count, setCount }} />}
-                        <View style={{ width: '90%' }}>
-                            <Divider color={'lightgray'} />
-                            <View style={[gStyles.row, { justifyContent: 'space-between' }]}>
-                                <H2 style={weightStyle}>Tổng tỉ lệ:</H2>
-                                <H2 style={weightStyle}>{totalWeight}</H2>
+            <ScrollView style={gStyles.w100}>
+                <H1>Đánh giá môn học</H1>
+                {evaluations === null ?
+                    <ActivityIndicator /> : <View>
+                        {evaluations.map((e, index) => (
+                            <View key={index}>
+                                <Evaluation
+                                    instance={e}
+                                    navigation={navigation}
+                                    callback={() => setCallback(!callback)}
+                                    state={{ count, setCount }} />
                             </View>
-                            <Divider color={'lightgray'} />
+                        ))}
+                        <View>
+                            {count <= 5 &&
+                                <Evaluation
+                                    instance={{ outline: outlineId }}
+                                    navigation={navigation}
+                                    callback={() => setCallback(!callback)}
+                                    state={{ count, setCount }} />}
+                            <View style={{ width: '90%' }}>
+                                <Divider color={'lightgray'} />
+                                <View style={[gStyles.row, { justifyContent: 'space-between' }]}>
+                                    <H2 style={weightStyle}>Tổng tỉ lệ:</H2>
+                                    <H2 style={weightStyle}>{totalWeight}</H2>
+                                </View>
+                                <Divider color={'lightgray'} />
+                            </View>
                         </View>
-                    </View>
-                </View>}
+                    </View>}
+            </ScrollView>
         </View>
     )
 }

@@ -41,24 +41,26 @@ const ObjectiveDetails = ({ route, navigation }) => {
 
     return (
         <View style={gStyles.container}>
-            <H1>Mục tiêu môn học</H1>
-            {objectives === null ? <ActivityIndicator /> : <View>
-                {objectives.map((o, index) => (
-                    <View key={index}>
+            <ScrollView style={gStyles.w100}>
+                <H1>Mục tiêu môn học</H1>
+                {objectives === null ? <ActivityIndicator /> : <View>
+                    {objectives.map((o, index) => (
+                        <View key={index}>
+                            <Objective
+                                instance={o}
+                                navigation={navigation}
+                                state={{ count, setCount }}
+                                callback={() => setCallback(!callback)} />
+                        </View>))}
+                    <View key={0}>
                         <Objective
-                            instance={o}
+                            instance={{ outline: outlineId }}
                             navigation={navigation}
                             state={{ count, setCount }}
                             callback={() => setCallback(!callback)} />
-                    </View>))}
-                <View key={0}>
-                    <Objective
-                        instance={{ outline: outlineId }}
-                        navigation={navigation}
-                        state={{ count, setCount }}
-                        callback={() => setCallback(!callback)} />
-                </View>
-            </View>}
+                    </View>
+                </View>}
+            </ScrollView>
         </View>
     )
 }

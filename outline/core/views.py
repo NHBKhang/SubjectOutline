@@ -247,11 +247,17 @@ class LearningOutcomeViewSet(viewsets.ViewSet, generics.ListCreateAPIView, gener
 
     def get_queryset(self):
         queryset = self.queryset
-        outline_id = self.request.query_params.get('outlineId', None)
+        outline_id = self.request.query_params.get('outlineId')
         if outline_id:
-            queryset = self.queryset.filter(evaluations__outline_id__exact=outline_id).distinct()
+            queryset = self.queryset.filter(objective__outline_id=outline_id).distinct()
 
         return queryset
+
+    def get_serializer_class(self):
+        if self.action in ['list', ]:
+            return serializers.LearningOutcomeListSerializer
+
+        return self.serializer_class
 
 
 class MaterialViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):

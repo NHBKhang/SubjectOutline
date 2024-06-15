@@ -25,12 +25,13 @@ const MessageCard = ({ user, content, createdDate, onPress }: Props) => {
                         <Text style={styles.content}>{content}</Text>
                     </View>
                     <View style={{ position: 'absolute', right: 5, bottom: 0 }}>
-                        {timeDifference(new Date(createdDate), new Date()) > 30 &&
-                            <Text style={styles.time}>
-                                {(isSameDay(new Date(createdDate), new Date()))
+                        <Text style={styles.time}>
+                            {timeDifference(new Date(createdDate), new Date(Date.now())) > 30 ?
+                                isSameDay(new Date(createdDate), new Date(Date.now()))
                                     ? format(new Date(createdDate), 'HH:mm')
-                                    : format(new Date(createdDate), 'dd/MM/yy')}
-                            </Text>}
+                                    : format(new Date(createdDate), 'dd/MM/yy') :
+                                format(new Date(createdDate), 'HH:mm')
+                            }</Text>
                     </View>
                 </View>
             </View>

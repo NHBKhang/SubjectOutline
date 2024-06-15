@@ -6,10 +6,10 @@ import Context from "../../configs/Context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { authApi, endpoints } from "../../configs/API";
 import {
-    PaperLogo, 
-    ActivityIndicator, 
-    H1, 
-    Button, 
+    PaperLogo,
+    ActivityIndicator,
+    H1,
+    Button,
     TextInput
 } from "../../components";
 
@@ -76,6 +76,7 @@ const AdditionalInfo = ({ navigation }) => {
                     error={!!birthday.error}
                     errorText={birthday.error}
                     autoCapitalize="none"
+                    maximumDate={new Date().setFullYear(new Date().getFullYear() - 18)}
                     type="date" />
 
                 <TextInput

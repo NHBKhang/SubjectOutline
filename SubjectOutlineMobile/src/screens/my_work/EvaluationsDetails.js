@@ -63,7 +63,7 @@ const EvaluationDetails = ({ navigation, route }) => {
                     }
                 ], { cancelable: false });
             }
-        }, false)
+        }, true)
     });
 
     const weightStyle = totalWeight == 1 ? gStyles.textPrimary : gStyles.textError;
@@ -134,7 +134,8 @@ const Evaluation = ({ instance, callback, navigation, state }) => {
                 <View style={{ width: '90%' }}>
                     <TouchableOpacity onPress={() => navigation.navigate("EvaluationCard", {
                         evaluation: evaluation,
-                        callback: callback
+                        callback: callback,
+                        update: () => updateEvaluation('method', null)
                     })}>
                         <Divider color={'lightgray'} />
                         <View style={[gStyles.row, { justifyContent: 'space-between' }]}>
@@ -163,7 +164,7 @@ const Evaluation = ({ instance, callback, navigation, state }) => {
 }
 
 export const EvaluationCard = ({ route, navigation }) => {
-    const { callback } = route.params;
+    const { callback, update } = route.params;
     const [showDropDown, setShowDropDown] = useState(false);
     const [evaluation, setEvaluation] = useState(route.params?.evaluation ?? null);
     const [learningOutcomes, setLearningOutcomes] = useState([]);
@@ -207,6 +208,7 @@ export const EvaluationCard = ({ route, navigation }) => {
                         "Content-Type": "application/json"
                     }
                 });
+                update();
             }
             setEvaluation(res.data);
             callback();

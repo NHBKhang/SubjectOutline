@@ -119,9 +119,9 @@ DATABASES = {
 }
 
 import pymysql
-from mongoengine import connect
-
 pymysql.install_as_MySQLdb()
+
+from mongoengine import connect
 connect('outlinedb', host='localhost', port=27017)
 
 DATABASE_ROUTERS = ['core.routing.ModelRouter']
@@ -180,9 +180,8 @@ OAUTH2_PROVIDER = {
 #     'django.contrib.auth.backends.ModelBackend'
 # )
 
-CLIENT_ID = 'G5JLQdHNwQQYEe4qXfNM9zapu3J34vv7sv3uM5gf'
-CLIENT_SECRET = ('047oJ4pB7QShDayGmbeci3LkFd7yfuSbNwFSC0LiP24ijYfIx9BAULYGqAG4b9ZxnoAqmWpbJeVTh68hxg1WHZgTydUhN9f3KTiQo'
-                 'lrsEyymALeWlTJ1HMh5hoB7ts1s')
+CLIENT_ID = 'GSw0iNB3OsV76nKJ14D59FwCUV9GCdc0FDMIsTsF'
+CLIENT_SECRET = 'xYtnNIIedhG93xGxBL1UfNRdcVv5ANrtAygAVXnbGDeykjdl8yJzldxCdkyyl2DYdvhWrgDUNCCBe48g4ZVTe50VxHQMUrKTX2LbXQcYGHbSypHzFvhPvS4gpsW2zT8b'
 
 # mail
 MAILGUN_DOMAIN = 'sandbox63ade0d78cd54797b4a61b3b9ab026b3.mailgun.org'

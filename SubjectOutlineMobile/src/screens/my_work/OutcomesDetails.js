@@ -95,13 +95,14 @@ const Outcome = ({ instance, navigation, callback }) => {
                 <View style={{ width: '90%' }}>
                     <TouchableOpacity onPress={() => navigation.navigate("OutcomeCard", {
                         outcome: outcome,
-                        callback: callback
+                        callback: callback,
+                        update: () => updateOutcome('code', null)
                     })}>
                         <Divider color={'lightgray'} />
                         <View style={[gStyles.row, { justifyContent: 'space-between' }]}>
                             <H2>{outcome.id ? `${outcome.id}. ` : null}
                                 {outcome.code}</H2>
-                            <H2>{outcome.objective.code}</H2>
+                            <H2>{outcome.objective?.code}</H2>
                         </View>
                         <Divider color={'lightgray'} />
                     </TouchableOpacity>
@@ -123,12 +124,27 @@ const Outcome = ({ instance, navigation, callback }) => {
 }
 
 export const OutcomeCard = ({ route, navigation }) => {
-    const { callback } = route.params;
+    const { callback, update } = route.params;
     const [outcome, setOutcome] = useState(route.params?.outcome ?? null);
     const [objectives, setObjectives] = useState(null);
     const [showDropDown, setShowDropDown] = useState(false);
     const updateOutcome = (field, value) => {
-        setOutcome(current => ({ ...current, [field]: value }))
+        setOutcome(current => {
+            const keys = field.split('.');
+            const lastIndex = keys.length - 1;
+            let nested = { ...current };
+
+            keys.reduce((acc, key, index) => {
+                if (index === lastIndex) {
+                    acc[key] = value;
+                } else {
+                    acc[key] = { ...acc[key] };
+                }
+                return acc[key];
+            }, nested);
+
+            return nested;
+        });
     };
 
     useEffect(() => {
@@ -153,12 +169,12 @@ export const OutcomeCard = ({ route, navigation }) => {
             let token = await AsyncStorage.getItem("access-token"), res = null;
             const form = new FormData();
             for (let key in outcome) {
-                if (key == 'objective')
+                if (key === 'objective')
                     form.append(key, outcome[key].id);
                 else
                     form.append(key, outcome[key]);
             }
-
+            console.log(form)
             if (outcome.id) {
                 res = await authApi(token).patch(endpoints["learning-outcome"](outcome.id),
                     form, {
@@ -173,6 +189,7 @@ export const OutcomeCard = ({ route, navigation }) => {
                         "Content-Type": "multipart/form-data"
                     }
                 });
+                update();
             }
             setOutcome(res.data);
             callback();
@@ -198,7 +215,8 @@ export const OutcomeCard = ({ route, navigation }) => {
                     visible={showDropDown}
                     onDismiss={() => setShowDropDown(false)}
                     showDropDown={() => setShowDropDown(true)}
-                    value={outcome.objective?.id.toString()}
+                    value={outcome.objective?.id?.toString()}
+                    setValue={v => updateOutcome('objective.id', Number(v))}
                     list={objectives ? objectives.map(o => ({
                         value: `${o.id}`,
                         label: o.code

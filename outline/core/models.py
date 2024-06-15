@@ -7,6 +7,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django_enumfield import enum
 from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError
+from django.contrib.auth.hashers import make_password
 import random
 import string
 
@@ -25,6 +26,10 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+    # def save(self, *args, **kwargs):
+    #     self.password = make_password(self.password)
+    #     super(User, self).save(*args, **kwargs)
 
 
 class BaseModel(models.Model):

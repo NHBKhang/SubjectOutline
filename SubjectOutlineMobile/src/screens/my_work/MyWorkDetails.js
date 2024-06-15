@@ -81,7 +81,7 @@ const MyWorkDetails = ({ route, navigation }) => {
         try {
             let form = new FormData();
             for (let key in outline)
-                if (key != 'requirement')
+                if (key !== 'requirement')
                     form.append(key, outline[key]);
             let token = await AsyncStorage.getItem("access-token");
             let res = await authApi(token).patch(endpoints["outline-details"](outlineId),

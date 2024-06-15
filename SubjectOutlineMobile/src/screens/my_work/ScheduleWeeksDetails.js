@@ -45,7 +45,12 @@ const OutcomeDetails = ({ route, navigation }) => {
                     </View>)}
                     <View key={0}>
                         <Schedule
-                            instance={{ outline: outlineId }}
+                            instance={{ 
+                                outline: outlineId,
+                                outcomes: [],
+                                evaluations: [],
+                                materials: [] 
+                            }}
                             navigation={navigation}
                             callback={() => setCallback(!callback)} />
                     </View>
@@ -80,7 +85,8 @@ const Schedule = ({ instance, navigation, callback, state }) => {
                 <View style={{ width: '90%' }}>
                     <TouchableOpacity onPress={() => navigation.navigate("ScheduleWeekCard", {
                         schedule: schedule,
-                        callback: callback
+                        callback: callback,
+                        update: () => updateSchedule('week', null)
                     })}>
                         <Divider color={'lightgray'} />
                         <View style={[gStyles.row, { justifyContent: 'space-between' }]}>
@@ -106,11 +112,11 @@ const Schedule = ({ instance, navigation, callback, state }) => {
 }
 
 export const ScheduleCard = ({ route, navigation }) => {
-    const { callback } = route.params;
+    const { callback, update } = route.params;
     const [schedule, setSchedule] = useState(route.params?.schedule ?? null);
     const [outcomes, setOutcomes] = useState(null);
     const [evaluations, setEvaluations] = useState(null);
-    const [materials, setMaterials] = useState(null);
+    const [materials, setMaterials] = useState([]);
     const [showDropDown, setShowDropDown] = useState(null);
     const updateSchedule = (field, value) => {
         setSchedule(current => ({ ...current, [field]: value }))
@@ -136,6 +142,7 @@ export const ScheduleCard = ({ route, navigation }) => {
                         "Content-Type": "application/json"
                     }
                 });
+                update();
             }
             setSchedule(res.data);
             callback();
@@ -168,7 +175,6 @@ export const ScheduleCard = ({ route, navigation }) => {
                 let m = await authApi(token).get(
                     `${endpoints.materials}?outlineId=${outline}`);
                 setMaterials(m.data);
-                console.log(schedule.outcomes);
             } catch (ex) {
                 console.error(ex);
                 Alert.alert("Error", "Không thể tải được kế hoạch giảng dạy");
@@ -201,9 +207,9 @@ export const ScheduleCard = ({ route, navigation }) => {
                     showDropDown={() => updateDropDown('outcomes', true)}
                     onDismiss={() => updateDropDown('outcomes', false)}
                     value={schedule.outcomes?.toString()}
-                    setValue={v => updateSchedule("outcomes", v)}
+                    setValue={v => updateSchedule("outcomes", dropdownValue(v))}
                     list={outcomes ? outcomes.map(c => ({
-                        label: `${c.code}`,
+                        label: c.code,
                         value: `${c.id}`
                     })) : []}
                     multiSelect />
@@ -214,9 +220,9 @@ export const ScheduleCard = ({ route, navigation }) => {
                     showDropDown={() => updateDropDown('evaluations', true)}
                     onDismiss={() => updateDropDown('evaluations', false)}
                     value={schedule.evaluations?.toString()}
-                    setValue={v => updateSchedule("evaluations", v)}
+                    setValue={v => updateSchedule("evaluations", dropdownValue(v))}
                     list={evaluations ? evaluations.map(c => ({
-                        label: `${c.method}`,
+                        label: c.method,
                         value: `${c.id}`
                     })) : []} />
                 <Dropdown

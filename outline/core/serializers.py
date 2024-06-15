@@ -64,7 +64,7 @@ class CourseDetailsSerializer(CourseSerializer):
 class MaterialSerializer(serializers.ModelSerializer):
     class Meta:
         model = Material
-        fields = ['id', 'no', 'type', 'content']
+        fields = ['id', 'no', 'type', 'content', 'outline']
 
 
 class MaterialListSerializer(serializers.ModelSerializer):
@@ -118,11 +118,17 @@ class ObjectiveSerializer(serializers.ModelSerializer):
 
 
 class LearningOutcomeSerializer(serializers.ModelSerializer):
-    objective = ObjectiveSerializer()
-
     class Meta:
         model = LearningOutcome
         fields = ['id', 'code', 'description', 'objective']
+
+
+class LearningOutcomeListSerializer(LearningOutcomeSerializer):
+    objective = ObjectiveSerializer()
+
+    class Meta:
+        model = LearningOutcomeSerializer.Meta.model
+        fields = LearningOutcomeSerializer.Meta.fields
 
 
 class ObjectiveListSerializer(serializers.ModelSerializer):
@@ -281,6 +287,8 @@ class AuthenticatedSubjectOutlineSerializer(SubjectOutlineSerializer):
 
 
 class ModifySubjectOutlineSerializer(serializers.ModelSerializer):
+    requirement = not serializers.SerializerMethodField(required=False)
+
     class Meta:
         model = SubjectOutline
         fields = ['title', 'course', 'years', 'rule', 'instructor', 'id', 'requirement']

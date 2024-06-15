@@ -45,10 +45,10 @@ export const signInWithEmailAndPassword = async (email, password) => {
 
                 return response.data.idToken;
             } catch (error) {
-                throw(error);
+                throw (error);
             }
         } else {
-            throw(error);
+            throw (error);
         }
     }
 };
@@ -62,10 +62,10 @@ export const getAllMessages = async (user) => {
         const array = [];
         await (async () => {
             for (const [receiver, messages] of Object.entries(res.data)) {
-                const messageKeys = Object.keys(messages);
+                const messageList = [...Object.values(messages)].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
                 const userData = await API.get(restEndpoints["user-by-username"](receiver));
-                if (messageKeys.length > 0) {
-                    const lastMessage = messages[messageKeys[0]];
+                if (messageList.length > 0) {
+                    const lastMessage = messageList[0];
                     const toUser = userData.data;
                     array.push({
                         user: {
@@ -81,7 +81,7 @@ export const getAllMessages = async (user) => {
                 }
             }
         })();
-        array.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+        array.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
         return array;
     } catch (error) {
@@ -93,7 +93,7 @@ export const getMessages = async (user, receiverUser) => {
     try {
         let idToken = await signInWithEmailAndPassword(user.email, "123456");
         let res = await FirebaseAuth(idToken).get(endpoints["messages-by-users"](user.username, receiverUser.username));
-        console.log(endpoints["messages-by-users"](user.username, receiverUser.username));
+       
         const array = [...Object.values(res.data)];
         array.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 

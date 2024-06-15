@@ -39,10 +39,10 @@ export const evaluationType = [{
 
 export const materialType = [{
     'value': '1',
-    'label': 'Tài liệu'
+    'label': 'Giáo trình'
 }, {
     'value': '2',
-    'label': 'ss'
+    'label': 'Tài liệu tham khảo'
 }, {
     'value': '3',
     'label': 'Phần mềm'

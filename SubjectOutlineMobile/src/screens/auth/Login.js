@@ -97,8 +97,9 @@ const Login = ({ navigation }) => {
             else
                 navigation.navigate("IntroStack");
         } catch (ex) {
-            await Alert.alert("Error", "Lỗi hệ thống!! Thử lại sau.");
+            Alert.alert("Error", `${ex.message}!! Thử lại sau.`);
             console.error(ex);
+            await AsyncStorage.removeItem("refresh-token");
         } finally {
             setLoading(false);
 

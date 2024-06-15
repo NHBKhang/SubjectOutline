@@ -94,7 +94,11 @@ const Material = ({ instance, state, callback, navigation }) => {
                 <View style={{ width: '90%' }}>
                     <TouchableOpacity onPress={() => navigation.navigate("MaterialCard", {
                         material: material,
-                        callback: callback
+                        callback: callback,
+                        update: () => {
+                            updateMaterial('no', null);
+                            updateMaterial('content', null);
+                        }
                     })}>
                         <Divider color={'lightgray'} />
                         <View style={[gStyles.row, { justifyContent: 'space-between' }]}>
@@ -124,7 +128,7 @@ const Material = ({ instance, state, callback, navigation }) => {
 }
 
 export const MaterialCard = ({ route, navigation }) => {
-    const { callback } = route.params;
+    const { callback, update } = route.params;
     const [material, setMaterial] = useState(route.params?.material ?? null);
     const [showDropDown, setShowDropDown] = useState(false);
     const updateMaterial = (field, value) => {
@@ -134,6 +138,7 @@ export const MaterialCard = ({ route, navigation }) => {
     const patchMaterial = async () => {
         try {
             let token = await AsyncStorage.getItem("access-token"), res = null;
+            console.log(material)
             if (material.id) {
                 res = await authApi(token).patch(endpoints.material(material.id),
                     material, {
@@ -148,6 +153,7 @@ export const MaterialCard = ({ route, navigation }) => {
                         "Content-Type": "application/json"
                     }
                 });
+                update();
             }
             setMaterial(res.data);
             callback();
@@ -179,7 +185,7 @@ export const MaterialCard = ({ route, navigation }) => {
                     returnKeyType="done"
                     multiline />
                 <Dropdown
-                    label='Loại'
+                    label='Loại học liệu'
                     mode='outlined'
                     visible={showDropDown}
                     showDropDown={() => setShowDropDown(true)}

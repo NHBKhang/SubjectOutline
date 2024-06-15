@@ -10,10 +10,11 @@ import { DefaultStyle } from 'react-native-reanimated/lib/typescript/reanimated2
 type Props = React.ComponentProps<typeof Input> & {
     errorText?: string,
     type?: string,
-    containerStyle?: DefaultStyle
+    containerStyle?: DefaultStyle,
+    maximumDate?: Date
 };
 
-const TextInput = ({ errorText, type, containerStyle, ...props }: Props) => {
+const TextInput = ({ errorText, type, containerStyle, maximumDate, ...props }: Props) => {
     const [date, setDate] = useState(parseStringToDate(props.value));
     const [show, setShow] = useState(false);
 
@@ -62,6 +63,7 @@ const TextInput = ({ errorText, type, containerStyle, ...props }: Props) => {
                                 onChange={onChange}
                                 is24Hour={true}
                                 display="default"
+                                maximumDate={maximumDate}
                                 onTouchCancel={() => setDate(null)}
                                 mode={type} />}
                     </TouchableOpacity>

@@ -92,7 +92,8 @@ const Objective = ({ instance, navigation, callback, state }) => {
                 <View style={{ width: '90%' }}>
                     <TouchableOpacity onPress={() => navigation.navigate("ObjectiveCard", {
                         objective: objective,
-                        callback: callback
+                        callback: callback,
+                        update: () => updateObjective('code', null)
                     })}>
                         <Divider color={'lightgray'} />
                         <View style={[gStyles.row, { justifyContent: 'space-between' }]}>
@@ -121,7 +122,7 @@ const Objective = ({ instance, navigation, callback, state }) => {
 }
 
 export const ObjectiveCard = ({ route, navigation }) => {
-    const { callback } = route.params;
+    const { callback, update } = route.params;
     const [objective, setObjective] = useState(route.params?.objective ?? null);
     const updateObjective = (field, value) => {
         setObjective(current => ({ ...current, [field]: value }))
@@ -144,6 +145,7 @@ export const ObjectiveCard = ({ route, navigation }) => {
                         "Content-Type": "application/json"
                     }
                 });
+                update();
             }
             setObjective(res.data);
             callback();

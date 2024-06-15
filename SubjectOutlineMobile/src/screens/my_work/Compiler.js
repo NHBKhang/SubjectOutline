@@ -79,15 +79,18 @@ const Compiler = ({ navigation }) => {
             if (isEmpty)
                 throw Error("Empty");
 
-            outline['instructor'] = user.id;
-
-            console.log(outline);
+            const form = new FormData();
+            for (let key in outline)
+                if (key !== 'requirement')
+                    form.append(key, outline[key]);
+            form.append('instructor', user.id);
+            console.log(form);
 
             let token = await AsyncStorage.getItem("access-token");
             let res = await authApi(token).post(endpoints["subject-outlines"],
-                outline, {
+                form, {
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'multipart/form-data'
                 }
             });
             console.info(res.data);

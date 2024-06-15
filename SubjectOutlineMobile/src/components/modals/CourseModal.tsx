@@ -13,15 +13,9 @@ import { types } from "../../core/data";
 
 const CourseModel = () => {
     const [modalVisible, setModalVisible] = useState(false);
-    const [dropDown, setDropDown] = useState({
-        "credit": false,
-        "faculty": false,
-        "type": false
-    });
+    const [dropDown, setDropDown] = useState(null);
     const updateDropDown = (key, value) => {
-        setDropDown(current => {
-            return { ...current, [key]: value }
-        })
+        setDropDown(current => ({ ...current, [key]: value }))
     };
     const [loading, setLoading] = useState(false);
     const [creditHours, setCreditHours] = useState([]);
@@ -64,7 +58,11 @@ const CourseModel = () => {
         const loadCreditHours = async () => {
             try {
                 let res = await API.get(endpoints["credit-hours"]);
-                await setCreditHours(res.data);
+                setCreditHours(res.data.map(c => ({
+                    label: `${c.total}`,
+                    value: `${c.id}`
+                })));
+                console.log(creditHours)
             } catch (ex) {
                 console.log(ex);
             }
@@ -124,21 +122,18 @@ const CourseModel = () => {
                                     value={course.description}
                                     onChangeText={t => updateCourse("description", t)} />
                                 <Dropdown
-                                    label='Số tín chỉ'
-                                    mode='outlined'
-                                    visible={dropDown.credit}
-                                    showDropDown={() => updateDropDown("credit", true)}
-                                    onDismiss={() => updateDropDown("credit", false)}
-                                    value={course.credit_hour.toString()}
-                                    setValue={v => updateCourse("credit_hour", Number(v))}
-                                    list={creditHours.map(c => ({
-                                        label: `${c.total}`,
-                                        value: `${c.id}`
-                                    }))} />
+                                    label={'Số tín chỉ'}
+                                    mode={'outlined'}
+                                    visible={dropDown?.credit_hour}
+                                    showDropDown={() => updateDropDown('credit_hour', true)}
+                                    onDismiss={() => updateDropDown('credit_hour', false)}
+                                    value={'1'}
+                                    setValue={v => updateCourse('credit_hour', v)}
+                                    list={creditHours} />
                                 <Dropdown
                                     label='Khoa'
                                     mode='outlined'
-                                    visible={dropDown.faculty}
+                                    visible={dropDown?.faculty}
                                     showDropDown={() => updateDropDown("faculty", true)}
                                     onDismiss={() => updateDropDown("faculty", false)}
                                     value={course.faculty.toString()}
@@ -150,7 +145,7 @@ const CourseModel = () => {
                                 <Dropdown
                                     label='Loa'
                                     mode='outlined'
-                                    visible={dropDown.type}
+                                    visible={dropDown?.type}
                                     showDropDown={() => updateDropDown("type", true)}
                                     onDismiss={() => updateDropDown("type", false)}
                                     value={course.type.toString()}

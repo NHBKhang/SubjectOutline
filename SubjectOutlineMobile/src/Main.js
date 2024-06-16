@@ -60,7 +60,7 @@ const Main = () => {
                         <Icon name="user" color={color} size={size} />
                 }} />
 
-            <Tab.Screen name="SettingsStack" component={SettingsStack}
+            {/* <Tab.Screen name="SettingsStack" component={SettingsStack}
                 options={{
                     title: 'Cài đặt',
                     headerShown: false,
@@ -68,7 +68,7 @@ const Main = () => {
                         <Icon name="gear"
                             color={color} size={size} />
                     ),
-                }} />
+                }} /> */}
         </Tab.Navigator>
     )
 }

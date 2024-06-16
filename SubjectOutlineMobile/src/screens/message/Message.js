@@ -35,7 +35,6 @@ const Message = ({ navigation }) => {
     const loadMessages = async () => {
       try {
         setMessages(await getAllMessages(user));
-        console.log(messages)
       } catch (ex) {
         setMessages([]);
         console.error(ex);

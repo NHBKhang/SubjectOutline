@@ -61,7 +61,7 @@ export const avatarValidator = (avatar: string) => {
     return '';
 };
 
-export const picker = async (callback) => {
+export const picker = async () => {
     let { status } = await ExpoPicker.requestMediaLibraryPermissionsAsync();
 
     if (status !== 'granted') {
@@ -70,16 +70,7 @@ export const picker = async (callback) => {
     else {
         let res = await ExpoPicker.launchImageLibraryAsync();
         if (!res.canceled) {
-            if (callback.length) {
-                for (const key in callback) {
-                    if (Object.hasOwnProperty.call(callback, key)) {
-                        const func = callback[key];
-                        func(res.assets[0]);
-                    }
-                }
-            }
-            else
-                callback(res.assets[0]);
+            return res.assets[0];
         }
     }
 }
@@ -217,6 +208,6 @@ export function getCurrentDate() {
 
 export const dropdownValue = (value: any) => {
     let arr = String(value).split(',');
-    
+
     return arr.map(Number).filter(num => num > 0);
 }

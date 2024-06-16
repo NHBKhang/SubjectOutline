@@ -9,7 +9,6 @@ import { authApi, endpoints } from '../../configs/API';
 
 const Profile = ({ navigation, user, setUser, editMode }) => {
     const [, dispatch] = useContext(Context);
-    const [avatar, setAvatar] = useState(null);
 
     const logout = () => {
         navigation.navigate('Login');
@@ -59,12 +58,12 @@ const Profile = ({ navigation, user, setUser, editMode }) => {
     ];
 
     const changeAvatar = async () => {
-        await picker(setAvatar);
+        let avatar = await picker();
 
-        Alert.alert(
-            'Cập nhật ảnh đại diện?',
-            'Tải ảnh đại diện mới lên ứng dụng.',
-            [
+        if (avatar) {
+            Alert.alert(
+                'Cập nhật ảnh đại diện?',
+                'Tải ảnh đại diện mới lên ứng dụng.', [
                 {
                     text: 'Cancel',
                     style: 'cancel'
@@ -78,7 +77,6 @@ const Profile = ({ navigation, user, setUser, editMode }) => {
                             name: avatar.fileName,
                             type: avatar.mimeType
                         });
-
                         try {
                             let token = await AsyncStorage.getItem("access-token");
                             let res = await authApi(token).patch(endpoints["current-user"],
@@ -100,10 +98,10 @@ const Profile = ({ navigation, user, setUser, editMode }) => {
                             Alert.alert("Failed", "Cập nhật ảnh đại diện thất bại.");
                         }
                     }
-                }
-            ],
-            { cancelable: false }
-        );
+                }],
+                { cancelable: false }
+            );
+        }
     }
 
     return (

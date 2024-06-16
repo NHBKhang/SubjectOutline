@@ -12,3 +12,4 @@ export { default as ActivityIndicator } from './ActivityIndicator';
 export { default as Divider } from './Divider';
 export { default as Dropdown } from './Dropdown';
 export { backButton, doneButton, editButton, addButton } from './HeaderButton';
+export { default as Modal } from './modals/Modal';

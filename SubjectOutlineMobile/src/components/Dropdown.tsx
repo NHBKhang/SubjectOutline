@@ -1,12 +1,15 @@
 import React, { memo } from "react";
 import { StyleSheet, View } from "react-native";
 import DropDown from "react-native-paper-dropdown";
+import { DefaultStyle } from "react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes";
 
-type Props = React.ComponentProps<typeof DropDown>;
+type Props = React.ComponentProps<typeof DropDown> & {
+    containerStyle?: DefaultStyle
+};
 
-const Dropdown = ({ ...props }: Props) => {
+const Dropdown = ({ containerStyle, ...props }: Props) => {
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, containerStyle]}>
             <DropDown {...props} />
         </View>
     )

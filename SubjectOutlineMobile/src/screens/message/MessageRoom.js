@@ -1,4 +1,4 @@
-import { memo, useContext, useEffect, useState } from "react";
+import { memo, useContext, useEffect, useRef, useState } from "react";
 import { Alert, ScrollView, StyleSheet, View } from "react-native";
 import API, { endpoints } from "../../configs/API";
 import { ActivityIndicator, Text } from "react-native-paper";
@@ -12,6 +12,7 @@ import MessageContentCard from "../../components/cards/MessageContentCard";
 
 const MessageRoom = ({ route }) => {
     const receiverUser = route.params?.user;
+    const scrollViewRef = useRef(null);
     const [toUser, setToUser] = useState(null);
     const [content, setContent] = useState('');
     const [messages, setMessages] = useState(null);
@@ -37,6 +38,10 @@ const MessageRoom = ({ route }) => {
             }
         }
         loadMessages();
+
+        if (scrollViewRef.current) {
+            scrollViewRef.current.scrollToEnd({ animated: false });
+        }
     }, [receiverUser]);
 
     const sendMessage = async (content) => {
@@ -53,6 +58,7 @@ const MessageRoom = ({ route }) => {
                     }
                 ]);
             }
+            setContent('');
         } catch (ex) {
             console.error(ex);
             Alert.alert("Failed", "Gửi tin nhắn thất bại!");
@@ -68,7 +74,9 @@ const MessageRoom = ({ route }) => {
                     <Text style={styles.text}>{toUser.name}</Text>
                 </View>
 
-                <ScrollView style={{ width: '100%', position: 'absolute', bottom: 75 }}>
+                <ScrollView style={{ bottom: 65, marginTop: 65 }}
+                    ref={scrollViewRef}
+                    onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: false })}>
                     {messages ? <View style={gStyles.chat}>
                         {messages.map((m, index) => <View key={index}>
                             {(index === 0 || timeDifference(new Date(messages[index - 1].timestamp), new Date(m.timestamp)) > 30) &&
@@ -121,6 +129,9 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         fontSize: 15
     },
+    textScroll: {
+
+    }
 });
 
 export default memo(MessageRoom);

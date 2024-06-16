@@ -35,7 +35,8 @@ export const signInWithEmailAndPassword = async (email, password) => {
 
         return response.data.idToken;
     } catch (error) {
-        if (error.response?.data?.error?.message === 'EMAIL_NOT_FOUND') {
+        let mess = error.response?.data?.error?.message;
+        if (mess === 'EMAIL_NOT_FOUND' || mess === 'INVALID_LOGIN_CREDENTIALS') {
             try {
                 let response = await axios.post(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${FIREBASE_API}`, {
                     email: email,
@@ -93,7 +94,7 @@ export const getMessages = async (user, receiverUser) => {
     try {
         let idToken = await signInWithEmailAndPassword(user.email, "123456");
         let res = await FirebaseAuth(idToken).get(endpoints["messages-by-users"](user.username, receiverUser.username));
-       
+
         const array = [...Object.values(res.data)];
         array.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 

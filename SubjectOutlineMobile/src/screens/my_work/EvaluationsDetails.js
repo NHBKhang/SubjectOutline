@@ -14,7 +14,8 @@ import {
     Divider,
     Dropdown,
     TextInput,
-    H1, H2
+    H1, H2,
+    Modal
 } from "../../components";
 
 const EvaluationDetails = ({ navigation, route }) => {
@@ -23,6 +24,10 @@ const EvaluationDetails = ({ navigation, route }) => {
     const [callback, setCallback] = useState(false);
     const [totalWeight, setTotalWeight] = useState(0);
     const [count, setCount] = useState(0);
+    const [modalVisible, setModalVisible] = useState(null);
+    const updateModalVisible = (field, value) => {
+        setModalVisible(current => ({ ...current, [field]: value }));
+    }
 
     useEffect(() => {
         const loadEvaluations = async () => {
@@ -44,12 +49,11 @@ const EvaluationDetails = ({ navigation, route }) => {
         }
 
         loadEvaluations();
-        setCallback(false);
-    }, [outlineId, callback]);
+    }, [callback]);
 
     navigation.setOptions({
         headerLeft: () => backButton(() => {
-            if (totalWeight != 1) {
+            if (totalWeight != 1 || count < 2 || count > 5) {
                 Alert.alert("Thoát", "Tổng tỉ lệ khác bằng 1. Bạn chắc chắn muốn thoát?", [
                     {
                         text: 'Không',
@@ -63,10 +67,14 @@ const EvaluationDetails = ({ navigation, route }) => {
                     }
                 ], { cancelable: false });
             }
-        }, true)
+            else {
+                navigation.goBack();
+            }
+        }, false)
     });
 
     const weightStyle = totalWeight == 1 ? gStyles.textPrimary : gStyles.textError;
+    const countStyle = count >= 2 || count <= 5 ? gStyles.textPrimary : gStyles.textError;
 
     return (
         <View style={gStyles.container}>
@@ -84,24 +92,56 @@ const EvaluationDetails = ({ navigation, route }) => {
                             </View>
                         ))}
                         <View>
-                            {count <= 5 &&
+                            {count < 5 &&
                                 <Evaluation
                                     instance={{ outline: outlineId }}
                                     navigation={navigation}
                                     callback={() => setCallback(!callback)}
                                     state={{ count, setCount }} />}
-                            <View style={{ width: '90%' }}>
-                                <Divider color={'lightgray'} />
-                                <View style={[gStyles.row, { justifyContent: 'space-between' }]}>
-                                    <H2 style={weightStyle}>Tổng tỉ lệ:</H2>
-                                    <H2 style={weightStyle}>{totalWeight}</H2>
+                            <View style={[gStyles.row, { alignItems: 'center' }]}>
+                                <View style={{ width: '90%' }}>
+                                    <Divider color={'lightgray'} />
+                                    <View style={[gStyles.row, { justifyContent: 'space-between' }]}>
+                                        <H2 style={weightStyle}>Tổng tỉ lệ:</H2>
+                                        <H2 style={weightStyle}>{totalWeight}</H2>
+                                    </View>
+                                    <Divider color={'lightgray'} />
                                 </View>
-                                <Divider color={'lightgray'} />
+                                <View style={{ width: '10%' }}>
+                                    <TouchableOpacity onPress={() => updateModalVisible('weight', true)}>
+                                        <Icon style={{ marginStart: 10 }}
+                                            name="exclamationcircle" size={25} color={'blue'} />
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                            <View style={[gStyles.row, { alignItems: 'center' }]}>
+                                <View style={{ width: '90%' }}>
+                                    <Divider color={'lightgray'} />
+                                    <View style={[gStyles.row, { justifyContent: 'space-between' }]}>
+                                        <H2 style={countStyle}>Tổng số lượng:</H2>
+                                        <H2 style={countStyle}>{count}</H2>
+                                    </View>
+                                    <Divider color={'lightgray'} />
+                                </View>
+                                <View style={{ width: '10%' }}>
+                                    <TouchableOpacity onPress={() => updateModalVisible('count', true)}>
+                                        <Icon style={{ marginStart: 10 }}
+                                            name="exclamationcircle" size={25} color={'blue'} />
+                                    </TouchableOpacity>
+                                </View>
                             </View>
                         </View>
-                    </View>}
-            </ScrollView>
-        </View>
+                    </View >}
+            </ScrollView >
+            <Modal
+                visible={modalVisible?.weight ?? false}
+                onRequestClose={() => updateModalVisible('weight', false)}
+                content="Tổng tỉ lệ các đánh giá phải bằng 1" />
+            <Modal
+                visible={modalVisible?.count ?? false}
+                onRequestClose={() => updateModalVisible('count', false)}
+                content="Số lượng các đánh giá tối thiểu là 2 và tối đa là 5" />
+        </View >
     )
 }
 
@@ -116,8 +156,9 @@ const Evaluation = ({ instance, callback, navigation, state }) => {
         if (evaluation.id) {
             try {
                 let token = await AsyncStorage.getItem("access-token");
-                await authApi(token).delete(endpoints.evaluation(evaluation));
+                await authApi(token).delete(endpoints.evaluation(evaluation.id));
                 Alert.alert("Done", "Xóa thành công");
+                callback();
             } catch (ex) {
                 console.error(ex);
                 Alert.alert("Error", "Xóa thất bại");
@@ -183,7 +224,6 @@ export const EvaluationCard = ({ route, navigation }) => {
                 let res = await authApi(token).get(
                     `${endpoints["learning-outcomes"]}?outlineId=${evaluation.outline}`);
                 setLearningOutcomes(res.data);
-                console.log(res.data);
             } catch (ex) {
                 console.error(ex);
             }
@@ -210,8 +250,8 @@ export const EvaluationCard = ({ route, navigation }) => {
                 });
                 update();
             }
-            setEvaluation(res.data);
             callback();
+            setEvaluation(res.data);
             Alert.alert("Done", "Cập nhật thành công!");
         } catch (ex) {
             Alert.alert("Error", "Lỗi hệ thống!");

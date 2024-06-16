@@ -35,6 +35,7 @@ class SubjectOutlineViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generi
 
         course_id = self.request.query_params.get("course_id")
         q = self.request.query_params.get("q")
+        years = self.request.query_params.get("years")
         instructor_id = self.request.query_params.get("instructor_id")
         if course_id:
             queries = queries.filter(course_id=course_id)
@@ -43,6 +44,8 @@ class SubjectOutlineViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generi
                                      Q(instructor__user__last_name__icontains=q) |
                                      Q(instructor__user__first_name__icontains=q) |
                                      Q(year__icontains=q))
+        if years and int(years) != 0:
+            queries = queries.filter(years_id=years)
         if instructor_id:
             queries = queries.filter(instructor__user_id=instructor_id)
 

@@ -78,7 +78,8 @@ const RegisterStudent = ({ navigation }) => {
                 value={username.value}
                 onChangeText={text => setUsername({ value: text, error: '' })}
                 error={!!username.error}
-                errorText={username.error} />
+                errorText={username.error}
+                autoCapitalize="none" />
 
             <TextInput
                 label="Họ"

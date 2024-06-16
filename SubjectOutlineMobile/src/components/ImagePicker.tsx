@@ -8,7 +8,9 @@ const ImagePicker = ({ label, errorText, value, onValueChange }) => {
   const [image, setImage] = useState(value);
 
   const onPress = async () => {
-    await picker([setImage, onValueChange]);
+    let avatar = await picker();
+    setImage(avatar);
+    onValueChange(avatar);
   }
 
   return (

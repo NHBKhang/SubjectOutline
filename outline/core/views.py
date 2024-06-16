@@ -143,7 +143,10 @@ class UserViewSet(viewsets.ViewSet, generics.ListCreateAPIView, generics.Retriev
         user = request.user
         if request.method.__eq__('PATCH'):
             for k, v in request.data.items():
-                setattr(user, k, v)
+                if k == 'password':
+                    user.set_password(v)
+                else:
+                    setattr(user, k, v)
             user.save()
 
         return Response(serializers.UserSerializer(user).data)

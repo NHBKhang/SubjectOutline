@@ -44,7 +44,6 @@ const StudentInfo = ({ navigation }) => {
                 type: avatar.value.mimeType
             });
             form.append('last_login', getCurrentDate());
-            console.log(form._parts[1]);
 
             try {
                 let token = await AsyncStorage.getItem("access-token");

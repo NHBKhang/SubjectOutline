@@ -4,7 +4,7 @@ from django.views import View
 from django.http import JsonResponse
 from outline import settings
 from mail.utils import send_email_via_mailgun
-from core import dao as core_dao
+from temp import dao as temp_dao
 import json
 
 
@@ -29,9 +29,9 @@ class SendRecoveryPasswordRequestView(View):
     def post(self, request, *args, **kwargs):
         try:
             user = json.loads(request.body)
-            print(user)
+            temp_dao.create_recovery_request(user.get('username'))
             context = {
-                'username': user.get('user'),
+                'username': user.get('username'),
             }
             send_email_via_mailgun('recovery', settings.MAILGUN_RECIPIENTS[0], context)
             return JsonResponse({'success': True}, status=200)

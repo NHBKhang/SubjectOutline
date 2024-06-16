@@ -18,11 +18,11 @@ const ForgotPassword = ({ navigation }) => {
       try {
         let res = await Mailgun.post(endpoints['recovery-password'],
           { username: username }, {
-            headers: {
-              "Content-Type": "application/json"
-            }
-        }
-        );
+          headers: {
+            "Content-Type": "application/json"
+          }
+        });
+        console.log(res.data);
 
         Alert.alert("Done", "Yêu cầu đã được gửi thành công!");
         navigation.navigate('Login');

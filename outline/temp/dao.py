@@ -12,3 +12,7 @@ def delete_user_request(id):
         user_request.delete()
     except Exception as e:
         raise e
+
+
+def create_recovery_request(username):
+    return UserRequest.objects.create(username=username)

@@ -71,7 +71,7 @@ class MajorAdmin(admin.ModelAdmin):
 
 
 class CourseAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'image', 'en_name', 'description', 'credit_hour', 'type', 'faculty']
+    list_display = ['id', 'name', 'en_name', 'credit_hour', 'type', 'faculty']
     search_fields = ['id', 'name', 'faculty']
     list_filter = ['faculty', 'type', 'credit_hour']
     readonly_fields = ['my_image', 'created_date', 'updated_date']

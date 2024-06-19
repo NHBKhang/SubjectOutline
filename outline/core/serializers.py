@@ -291,7 +291,7 @@ class ModifySubjectOutlineSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SubjectOutline
-        fields = ['title', 'course', 'years', 'rule', 'instructor', 'id', 'requirement']
+        fields = ['title', 'course', 'years', 'rule', 'instructor', 'id', 'requirement', ]
 
 
 class PublicUserSerializer(serializers.ModelSerializer):
